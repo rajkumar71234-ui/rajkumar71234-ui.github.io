@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — Minimal Wealth Advisory Pvt Ltd</title>
+<meta name="description" content="Book a thirty-minute conversation with Minimal Wealth Advisory. No cost, no pitch. Chennai, Tamil Nadu.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="logo" href="index.html" aria-label="Minimal Wealth Advisory — home">
+      <svg class="logo__mark" viewBox="58 68 187 187" aria-hidden="true" fill="none" stroke="#E0402B" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+        <path d="M111 116V187A20 20 0 0 1 91 207H67V77h38A32.5 32.5 0 0 1 137.5 109.5V246"/>
+        <path d="M192 116V187A20 20 0 0 0 212 207h24V77h-38A32.5 32.5 0 0 0 165.5 109.5V246"/>
+      </svg>
+      <span class="logo__text">
+        <span class="logo__name">Minimal Wealth</span>
+        <span class="logo__sub">Advisory Pvt Ltd</span>
+      </span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="primary-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="team.html">Team</a>
+      <a href="scan.html">Scan Portfolio</a>
+      <a href="calculator.html">Calculator</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="section">
+    <div class="shell grid grid--split">
+      <h1 class="sr-only">Contact Minimal Wealth Advisory</h1>
+
+      <!-- ======================================================= details -->
+      <div class="reveal">
+        <span class="eyebrow eyebrow--muted">Reach us directly</span>
+
+        <dl class="contact-list">
+          <div class="contact-row">
+            <dt>Email</dt>
+            <dd><a href="mailto:hello@minimalwealth.in">hello@minimalwealth.in</a></dd>
+          </div>
+          <div class="contact-row">
+            <dt>Phone</dt>
+            <dd><a href="tel:+910000000000">+91 00000 00000</a></dd>
+          </div>
+          <div class="contact-row">
+            <dt>WhatsApp</dt>
+            <dd><a href="https://wa.me/910000000000" target="_blank" rel="noopener">Message us</a></dd>
+          </div>
+          <div class="contact-row">
+            <dt>Office</dt>
+            <dd>[Address line 1]<br>[Address line 2]<br>Chennai, Tamil Nadu [PIN]</dd>
+          </div>
+          <div class="contact-row">
+            <dt>Hours</dt>
+            <dd>Monday to Saturday, 10.00 &ndash; 18.30 IST</dd>
+          </div>
+        </dl>
+
+      </div>
+
+      <!-- ========================================================== form -->
+      <div class="reveal">
+        <span class="eyebrow">Send an enquiry</span>
+
+        <div class="form__status" id="form-status" role="status">
+          Your mail application should now be open with the details filled in. If it did not
+          open, please write to us directly at hello@minimalwealth.in.
+        </div>
+
+        <!--
+          This form has no backend. By default it opens the visitor's mail client
+          with everything pre-filled (see assets/js/main.js).
+          To use a real form service, add an action, e.g.:
+            <form class="form" id="enquiry-form" method="POST" action="https://formspree.io/f/YOURID">
+          and update the data-mailto address below.
+        -->
+        <form class="form" id="enquiry-form" name="enquiry" method="POST" action="https://formsubmit.co/rajkumar71234@gmail.com">
+          <input type="hidden" name="_subject" value="Website enquiry — minimalwealth">
+          <input type="hidden" name="_next" value="https://rajkumar71234-ui.github.io/thanks.html">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+          <p class="hp"><label>Leave this empty <input name="_honey"></label></p>
+
+          <div class="field">
+            <label for="name">Your name <span class="req">*</span></label>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+          </div>
+
+          <div class="field--row">
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="phone">Phone <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone" autocomplete="tel" pattern="[0-9+ ]{10,15}" required>
+            </div>
+          </div>
+
+          <div class="field--row">
+            <div class="field">
+              <label for="interest">I want to talk about <span class="req">*</span></label>
+              <select id="interest" name="interest" required>
+                <option value="">Select</option>
+                <option>Not sure yet — start from the beginning</option>
+                <option>Mutual Funds</option>
+                <option>PMS</option>
+                <option>Bonds</option>
+                <option>AIF</option>
+                <option>SIF</option>
+                <option>Insurance</option>
+                <option>Reviewing what I already hold</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="goal">Main goal <span class="req">*</span></label>
+              <select id="goal" name="goal" required>
+                <option value="">Select</option>
+                <option>Retirement</option>
+                <option>Child's education</option>
+                <option>Daughter's marriage</option>
+                <option>Health cover</option>
+                <option>Life cover</option>
+                <option>Emergency fund</option>
+                <option>Buying a house</option>
+                <option>Something else</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="message">Anything we should know <span class="req">*</span></label>
+            <textarea id="message" name="message" required placeholder="Where you stand today, what is worrying you, or what you are trying to reach and by when."></textarea>
+          </div>
+
+          <div>
+            <button class="btn" type="submit">Send enquiry
+              <svg class="btn__arrow" width="15" height="10" viewBox="0 0 15 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 5h12M9 1l4 4-4 4"/></svg>
+            </button>
+          </div>
+
+          <p class="form__note">
+            Every field marked <span class="req">*</span> is required. We use these details only to respond to your enquiry. Nothing is shared with any
+            third party, and you will not be added to a marketing list without asking.
+          </p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ================================================================ faq -->
+  <section class="section section--alt">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Common questions</span>
+      </div>
+
+      <div class="acc reveal">
+        <div class="acc__item">
+          <button class="acc__btn" aria-expanded="false" aria-controls="faq1">
+            I already have investments everywhere. Where do I even start?
+            <svg class="acc__sign" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1v14M1 8h14"/></svg>
+          </button>
+          <div class="acc__panel" id="faq1">
+            You start by putting everything on one page. Bring your statements, policies and
+            loan details to the first conversation. In most cases the first output is not a
+            new investment — it is a shorter list, with two or three things you can stop
+            doing immediately.
+          </div>
+        </div>
+
+        <div class="acc__item">
+          <button class="acc__btn" aria-expanded="false" aria-controls="faq2">
+            Do I need a large amount to work with you?
+            <svg class="acc__sign" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1v14M1 8h14"/></svg>
+          </button>
+          <div class="acc__panel" id="faq2">
+            No. Planning starts wherever you are. Some of the products we advise on do carry
+            SEBI-prescribed minimums — &#8377;50 lakh for PMS, &#8377;1 crore for AIF,
+            &#8377;10 lakh for SIF — but a mutual fund SIP can begin at a few hundred rupees a
+            month, and insurance and the emergency fund come before any of it.
+          </div>
+        </div>
+
+        <div class="acc__item">
+          <button class="acc__btn" aria-expanded="false" aria-controls="faq3">
+            How is this different from what my bank relationship manager does?
+            <svg class="acc__sign" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1v14M1 8h14"/></svg>
+          </button>
+          <div class="acc__panel" id="faq3">
+            The order of the conversation. A product-led conversation starts with what is
+            available this quarter. Ours starts with your balance sheet and your goal, and
+            frequently ends with fewer products than you walked in holding.
+          </div>
+        </div>
+
+        <div class="acc__item">
+          <button class="acc__btn" aria-expanded="false" aria-controls="faq4">
+            What happens if the market falls after I invest?
+            <svg class="acc__sign" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1v14M1 8h14"/></svg>
+          </button>
+          <div class="acc__panel" id="faq4">
+            It will, at some point — that is not a failure of the plan, it is a feature of the
+            asset. What matters is that money you need within three years was never put there
+            in the first place. That is why we de-risk goals as their dates approach, so a bad
+            year never lands on a bill that is already due.
+          </div>
+        </div>
+
+        <div class="acc__item">
+          <button class="acc__btn" aria-expanded="false" aria-controls="faq5">
+            How do you get paid?
+            <svg class="acc__sign" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 1v14M1 8h14"/></svg>
+          </button>
+          <div class="acc__panel" id="faq5">
+            <!-- REPLACE: state your actual model — advisory fee, distribution commission, or both. -->
+            We tell you before you commit to anything, in rupees, for every product discussed.
+            [Add your fee model here — advisory fee, distribution commission, or a combination —
+            along with your registration details.]
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="shell footer">
+    <div class="footer__top">
+      <div>
+        <a class="logo" href="index.html">
+          <svg class="logo__mark" viewBox="58 68 187 187" aria-hidden="true" fill="none" stroke="#E0402B" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+        <path d="M111 116V187A20 20 0 0 1 91 207H67V77h38A32.5 32.5 0 0 1 137.5 109.5V246"/>
+        <path d="M192 116V187A20 20 0 0 0 212 207h24V77h-38A32.5 32.5 0 0 0 165.5 109.5V246"/>
+      </svg>
+          <span class="logo__text">
+            <span class="logo__name">Minimal Wealth</span>
+            <span class="logo__sub">Advisory Pvt Ltd</span>
+          </span>
+        </a>
+        <p class="footer__tag">Understand the position. Define the goal. Own only what the goal needs.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="scan.html">Scan Portfolio</a></li>
+          <li><a href="calculator.html">Goal Calculator</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="solutions.html#fixed-income">Fixed Income</a></li>
+          <li><a href="solutions.html#equity">Equity</a></li>
+          <li><a href="solutions.html#commodity">Commodity</a></li>
+          <li><a href="solutions.html#insurance">Insurance</a></li>
+          <li><a href="solutions.html#tax">Tax Consulting</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Reach us</h4>
+        <ul>
+          <li><a href="mailto:hello@minimalwealth.in">hello@minimalwealth.in</a></li>
+          <li><a href="tel:+910000000000">+91 00000 00000</a></li>
+          <li>Chennai, Tamil Nadu, India</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>&copy; <span data-year>2026</span> Minimal Wealth Advisory Pvt Ltd. All rights reserved.</span>
+      <span>CIN: [to be added] &middot; AMFI ARN: [to be added] &middot; SEBI Reg: [to be added]</span>
+    </div>
+
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Goal Calculator — Minimal Wealth Advisory Pvt Ltd</title>
+<meta name="description" content="Work out what your goal actually needs. SIP, STP, lumpsum additions and exits, inflation and a return assumption by asset type — projected month by month.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="logo" href="index.html" aria-label="Minimal Wealth Advisory — home">
+      <svg class="logo__mark" viewBox="58 68 187 187" aria-hidden="true" fill="none" stroke="#E0402B" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+        <path d="M111 116V187A20 20 0 0 1 91 207H67V77h38A32.5 32.5 0 0 1 137.5 109.5V246"/>
+        <path d="M192 116V187A20 20 0 0 0 212 207h24V77h-38A32.5 32.5 0 0 0 165.5 109.5V246"/>
+      </svg>
+      <span class="logo__text">
+        <span class="logo__name">Minimal Wealth</span>
+        <span class="logo__sub">Advisory Pvt Ltd</span>
+      </span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="primary-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="team.html">Team</a>
+      <a href="scan.html">Scan Portfolio</a>
+      <a href="calculator.html" aria-current="page">Calculator</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="page-head">
+    <div class="shell">
+      <span class="eyebrow">Goal calculator</span>
+      <h1 class="h1 balance">See what the goal actually needs.</h1>
+      <p class="lead">
+        Put in what you already have and what you can put away every month. We run it forward
+        month by month, add inflation to the target, and tell you whether you get there &mdash;
+        and what it takes if you do not.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell">
+      <div class="calc">
+
+        <!-- ======================================================= inputs -->
+        <form class="calc__form form" id="calc-form" novalidate>
+
+          <fieldset class="fset">
+            <legend class="fset__legend">The goal</legend>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="c-target">Amount you need <span class="req">*</span></label>
+                <input type="number" id="c-target" min="0" step="10000" value="5000000" required>
+                <p class="field__hint">In today&rsquo;s money. We add inflation for you.</p>
+              </div>
+              <div class="field">
+                <label for="c-years">Years from now <span class="req">*</span></label>
+                <input type="number" id="c-years" min="1" max="50" value="15" required>
+              </div>
+            </div>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="c-infl">Inflation to apply (% a year)</label>
+                <input type="number" id="c-infl" min="0" max="15" step="0.5" value="6">
+              </div>
+              <div class="field">
+                <label for="c-type">Where the money is invested <span class="req">*</span></label>
+                <select id="c-type">
+                  <option value="13">Small cap equity</option>
+                  <option value="12.5">Mid cap equity</option>
+                  <option value="12" selected>Flexi / multi cap equity</option>
+                  <option value="11">Large cap / index</option>
+                  <option value="9.5">Hybrid / balanced</option>
+                  <option value="8">Gold</option>
+                  <option value="7">Corporate bond / debt fund</option>
+                  <option value="6">Liquid fund / fixed deposit</option>
+                  <option value="custom">Something else &mdash; I will set the rate</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="c-rate">Return assumption (% a year)</label>
+              <input type="number" id="c-rate" min="0" max="30" step="0.25" value="12">
+              <p class="field__hint">
+                Set automatically from the asset type above. Change it if you want to be more
+                careful &mdash; this is a planning assumption, not a promise.
+              </p>
+            </div>
+          </fieldset>
+
+          <fieldset class="fset">
+            <legend class="fset__legend">What you are putting in</legend>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="c-capital">What you already hold today (&#8377;) <span class="req">*</span></label>
+                <input type="number" id="c-capital" min="0" step="1000" value="500000" required>
+              </div>
+              <div class="field">
+                <label for="c-sip">Monthly SIP (&#8377;) <span class="req">*</span></label>
+                <input type="number" id="c-sip" min="0" step="500" value="20000" required>
+              </div>
+            </div>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="c-stp">Monthly STP, if you are doing one (&#8377;)</label>
+                <input type="number" id="c-stp" min="0" step="500" value="0">
+                <p class="field__hint">Money moved across every month from a parked lumpsum.</p>
+              </div>
+              <div class="field">
+                <label for="c-stp-from">STP starts in</label>
+                <input type="month" id="c-stp-from">
+              </div>
+            </div>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="c-add">One-time addition later (&#8377;)</label>
+                <input type="number" id="c-add" min="0" step="1000" value="0">
+              </div>
+              <div class="field">
+                <label for="c-add-when">Added in</label>
+                <input type="month" id="c-add-when">
+              </div>
+            </div>
+
+            <div class="field--row">
+              <div class="field">
+                <label for="c-exit">One-time withdrawal later (&#8377;)</label>
+                <input type="number" id="c-exit" min="0" step="1000" value="0">
+                <p class="field__hint">A known outgo on the way &mdash; a fee, a down payment.</p>
+              </div>
+              <div class="field">
+                <label for="c-exit-when">Taken out in</label>
+                <input type="month" id="c-exit-when">
+              </div>
+            </div>
+          </fieldset>
+
+          <div>
+            <button class="btn btn--brown" type="submit">Calculate
+              <svg class="btn__arrow" width="15" height="10" viewBox="0 0 15 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 5h12M9 1l4 4-4 4"/></svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- ====================================================== results -->
+        <aside class="calc__out" id="calc-out" aria-live="polite">
+          <div class="calc__verdict" id="calc-verdict"></div>
+
+          <dl class="calc__stats">
+            <div class="calc__stat"><dt>Target in <span id="o-years">15</span> years, after inflation</dt><dd id="o-target">&mdash;</dd></div>
+            <div class="calc__stat"><dt>What your plan reaches</dt><dd id="o-value">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Surplus / shortfall</dt><dd id="o-gap">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Monthly SIP needed to reach it</dt><dd id="o-need">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Total you put in</dt><dd id="o-invested">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Growth on top</dt><dd id="o-growth">&mdash;</dd></div>
+          </dl>
+
+          <p class="calc__note">
+            A projection, not a forecast. Returns are assumed to arrive evenly, which no market
+            ever does. Use it to size the decision, then talk to us before acting on it.
+          </p>
+        </aside>
+
+      </div>
+
+      <!-- =========================================================== table -->
+      <div class="calc__tablewrap" id="calc-tablewrap" hidden>
+        <h2 class="h3" style="margin-bottom:18px">Year by year</h2>
+        <div class="tablescroll">
+          <table class="ytable">
+            <thead>
+              <tr><th>Year</th><th>Months in</th><th>Put in so far</th><th>Value at year end</th></tr>
+            </thead>
+            <tbody id="calc-rows"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="shell" style="max-width:820px">
+      <span class="eyebrow">Next step</span>
+      <h2 class="h2 balance">A number on a screen is not a plan.</h2>
+      <p class="lead" style="margin-top:20px">
+        Send us what you already hold and we will run this against your real position &mdash;
+        overlap, cost, cover and the gap to the goal &mdash; and reply in writing within 24 hours,
+        free of cost.
+      </p>
+      <p style="margin-top:26px">
+        <a class="btn btn--brown" href="scan.html">Scan my portfolio
+          <svg class="btn__arrow" width="15" height="10" viewBox="0 0 15 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 5h12M9 1l4 4-4 4"/></svg>
+        </a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<script src="assets/js/main.js"></script>
+<script src="assets/js/calc.js"></script>
+</body>
+</html>

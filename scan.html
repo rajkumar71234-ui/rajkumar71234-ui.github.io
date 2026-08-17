@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scan Your Existing Portfolio — Minimal Wealth Advisory Pvt Ltd</title>
+<meta name="description" content="Send us what you already hold and we will tell you what is working, what is not, and what you can simply stop doing.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="shell site-header__inner">
+    <a class="logo" href="index.html" aria-label="Minimal Wealth Advisory — home">
+      <svg class="logo__mark" viewBox="58 68 187 187" aria-hidden="true" fill="none" stroke="#E0402B" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+        <path d="M111 116V187A20 20 0 0 1 91 207H67V77h38A32.5 32.5 0 0 1 137.5 109.5V246"/>
+        <path d="M192 116V187A20 20 0 0 0 212 207h24V77h-38A32.5 32.5 0 0 0 165.5 109.5V246"/>
+      </svg>
+      <span class="logo__text">
+        <span class="logo__name">Minimal Wealth</span>
+        <span class="logo__sub">Advisory Pvt Ltd</span>
+      </span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="primary-nav" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="primary-nav">
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="solutions.html">Solutions</a>
+      <a href="team.html">Team</a>
+      <a href="scan.html" aria-current="page">Scan Portfolio</a>
+      <a href="calculator.html">Calculator</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="page-head">
+    <div class="shell">
+      <span class="eyebrow">Scan portfolio</span>
+      <h1 class="h1 balance">Scan your existing portfolio.</h1>
+      <p class="lead">
+        Fill this once and we will read everything you already hold against the goal you name.
+        You will get a written reply by email within 24 hours, free of cost.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="shell shell--form">
+
+      <form class="form form--scan form--quick" name="portfolio-scan" method="POST"
+            action="https://formsubmit.co/rajkumar71234@gmail.com" enctype="multipart/form-data">
+        <input type="hidden" name="_subject" value="Portfolio scan request — minimalwealth">
+        <input type="hidden" name="_next" value="https://rajkumar71234-ui.github.io/thanks.html">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <p class="hp"><label>Leave this empty <input name="_honey"></label></p>
+        <input type="hidden" name="Scan type" id="s-mode" value="Quick scan">
+
+        <div class="scanmode" role="group" aria-label="Choose how much detail to send">
+          <button type="button" class="scanmode__btn is-on" data-mode="quick" aria-pressed="true">Quick scan</button>
+          <button type="button" class="scanmode__btn" data-mode="detailed" aria-pressed="false">Detailed analysis</button>
+        </div>
+        <p class="scanmode__hint" id="scanmode-hint">
+          Quick scan: six things and your statement, and we tell you what overlaps and what it is
+          costing you. Switch to detailed if you want the gap to a specific goal worked out too.
+        </p>
+
+        <!-- ------------------------------------------------------- about you -->
+        <fieldset class="fset">
+          <legend class="fset__legend">About you</legend>
+
+          <div class="field--row">
+            <div class="field">
+              <label for="s-name">Full name <span class="req">*</span></label>
+              <input type="text" id="s-name" name="Name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="s-email">Email <span class="req">*</span></label>
+              <input type="email" id="s-email" name="Email" autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="field--row">
+            <div class="field">
+              <label for="s-phone">Mobile <span class="req">*</span></label>
+              <input type="tel" id="s-phone" name="Phone" autocomplete="tel"
+                     inputmode="numeric" pattern="[0-9+ ]{10,15}" required>
+            </div>
+            <div class="field only-detailed">
+              <label for="s-age">Your age <span class="req">*</span></label>
+              <input type="number" id="s-age" name="Age" min="18" max="90" required>
+            </div>
+          </div>
+
+          <div class="field--row only-detailed">
+            <div class="field">
+              <label for="s-marital">Marital status <span class="req">*</span></label>
+              <select id="s-marital" name="Marital status" required>
+                <option value="">Select</option>
+                <option>Married</option>
+                <option>Not married</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="s-kids">Number of children <span class="req">*</span></label>
+              <input type="number" id="s-kids" name="Number of children" min="0" max="10" value="0" required>
+            </div>
+          </div>
+
+          <div class="field--row only-detailed">
+            <div class="field">
+              <label for="s-kidages">Children&rsquo;s ages</label>
+              <input type="text" id="s-kidages" name="Children ages" placeholder="e.g. 8 and 4 &mdash; leave blank if none">
+            </div>
+            <div class="field">
+              <label for="s-dep">Other dependants and their ages <span class="req">*</span></label>
+              <input type="text" id="s-dep" name="Dependants" placeholder="e.g. mother 68, father 72 &mdash; type None if none" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- ------------------------------------------------------- your money -->
+        <fieldset class="fset only-detailed">
+          <legend class="fset__legend">Where you stand today</legend>
+
+          <div class="field--row">
+            <div class="field">
+              <label for="s-income">Monthly take-home income (&#8377;) <span class="req">*</span></label>
+              <input type="number" id="s-income" name="Monthly income" min="0" step="1000" required>
+            </div>
+            <div class="field">
+              <label for="s-emi">Total monthly EMI running (&#8377;) <span class="req">*</span></label>
+              <input type="number" id="s-emi" name="Monthly EMI" min="0" step="500" value="0" required>
+            </div>
+          </div>
+
+          <div class="field--row">
+            <div class="field">
+              <label for="s-capital">Value of what you already hold (&#8377;) <span class="req">*</span></label>
+              <input type="number" id="s-capital" name="Current capital" min="0" step="1000" required>
+              <p class="field__hint">Funds, shares, deposits, gold, EPF &mdash; a rough total is fine.</p>
+            </div>
+            <div class="field">
+              <label for="s-lump">Lumpsum you can invest now (&#8377;) <span class="req">*</span></label>
+              <input type="number" id="s-lump" name="Lumpsum available" min="0" step="1000" value="0" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="s-sip">Monthly SIP you can commit to (&#8377;) <span class="req">*</span></label>
+            <input type="number" id="s-sip" name="Monthly SIP" min="0" step="500" required>
+          </div>
+        </fieldset>
+
+        <!-- ------------------------------------------------------------ goal -->
+        <fieldset class="fset only-detailed">
+          <legend class="fset__legend">The goal</legend>
+
+          <div class="field--row">
+            <div class="field">
+              <label for="s-goal">What is this money for? <span class="req">*</span></label>
+              <select id="s-goal" name="Goal" required>
+                <option value="">Select</option>
+                <option>Retirement</option>
+                <option>Child&rsquo;s education</option>
+                <option>Daughter&rsquo;s marriage</option>
+                <option>Buying a house</option>
+                <option>A car</option>
+                <option>Emergency fund</option>
+                <option>Health or life cover</option>
+                <option>A gift to grandchildren</option>
+                <option>Reviewing what I already hold</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="s-years">Years available for this goal <span class="req">*</span></label>
+              <input type="number" id="s-years" name="Years to goal" min="1" max="50" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="s-target">Amount you need at the end (&#8377;) <span class="req">*</span></label>
+            <input type="number" id="s-target" name="Target amount" min="0" step="10000" required>
+            <p class="field__hint">Today&rsquo;s value is fine &mdash; we will add inflation ourselves.</p>
+          </div>
+        </fieldset>
+
+        <!-- ------------------------------------------------------ attachment -->
+        <fieldset class="fset">
+          <legend class="fset__legend">Your existing portfolio</legend>
+
+          <div class="field">
+            <label for="s-file">Upload your portfolio <span class="req">*</span></label>
+            <input type="file" id="s-file" name="Portfolio file"
+                   accept=".xlsx,.xls,.csv,.pdf" required>
+            <p class="field__hint">
+              Excel, CSV or PDF. A CAS statement, a broker holdings report or your own sheet all work.
+            </p>
+          </div>
+
+          <div class="field">
+            <label for="s-call">Do you want a 30-minute video call as well? <span class="req">*</span></label>
+            <select id="s-call" name="Wants 30-minute call" required>
+              <option value="">Select</option>
+              <option>Yes &mdash; please suggest a time</option>
+              <option>No &mdash; the written reply is enough for now</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="s-notes">Anything else we should know</label>
+            <textarea id="s-notes" name="Notes" placeholder="A worry, a date that is fixed, a policy you are unsure about."></textarea>
+          </div>
+        </fieldset>
+
+        <div>
+          <button class="btn" type="submit">Send it for a scan
+            <svg class="btn__arrow" width="15" height="10" viewBox="0 0 15 10" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 5h12M9 1l4 4-4 4"/></svg>
+          </button>
+        </div>
+
+        <p class="form__note">
+          Every field marked <span class="req">*</span> is required. We use these details only to
+          prepare your scan. Nothing is shared with any third party, and you will not be added to
+          a marketing list.
+        </p>
+      </form>
+
+    </div>
+  </section>
+
+</main>
+
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
