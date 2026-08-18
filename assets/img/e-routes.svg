@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 470" role="img" aria-label="One elephant, three routes: water, fruit and bamboo. Only one route leads to what it actually needs.">
+  <rect width="1200" height="470" fill="#F4F1EB"/>
+
+  <g fill="none" stroke="#C9C1B4" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="2 11">
+    <path d="M300 232 C470 232 560 150 700 118"/>
+    <path d="M300 244 C470 260 560 330 700 356"/>
+  </g>
+
+  <path d="M300 238 C470 238 560 238 700 238" fill="none" stroke="#E0402B" stroke-width="2.8" stroke-linecap="round"/>
+
+  <!-- the elephant, choosing -->
+  <g transform="translate(268 118) scale(-3.05 3.05)" fill="none" stroke="#74604B" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M14 31C13 20 17 11 25 11c6 0 8 4 9 8 6-5 14-3 19 5 4 6 4 13 3 20"/>
+    <path d="M55 44H21c-4-2-6-6-6-10"/>
+    <path d="M14 31c-2 7-2 15 0 20 1 3 5 3 5 0 0-4-1-9-1-13"/>
+    <path d="M25 18c7 0 10 5 10 11s-4 10-9 10"/>
+    <path d="M23 44v11M31 44v11M45 44v11M55 44v11"/>
+    <circle cx="18" cy="24" r="1.1" fill="#74604B" stroke="none"/>
+  </g>
+
+  <!-- water -->
+  <g transform="translate(700 60)">
+    <rect width="196" height="116" rx="2" fill="#FAF8F5" stroke="#E4DFD6"/>
+    <g transform="translate(24 26)" fill="none" stroke="#C9C1B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 3c5 7 10 13 10 19a10 10 0 0 1-20 0c0-6 5-12 10-19z"/>
+      <path d="M2 43c4-3 7-3 11 0s7 3 11 0 7-3 11 0"/>
+    </g>
+    <text x="86" y="48" font-family="Inter, Helvetica, Arial, sans-serif" font-size="19" font-weight="600" fill="#1C1C1C">Water</text>
+    <text x="86" y="72" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13.5" fill="#75706A">Needed today</text>
+  </g>
+
+  <!-- fruit -->
+  <g transform="translate(700 180)">
+    <rect width="196" height="116" rx="2" fill="#FAF8F5" stroke="#E0402B"/>
+    <g transform="translate(24 26)" fill="none" stroke="#E0402B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="18" cy="30" r="14"/>
+      <path d="M18 16V8"/>
+      <path d="M18 11c5-6 12-5 12-5s0 7-6 8c-3 .5-6-3-6-3z"/>
+    </g>
+    <text x="86" y="48" font-family="Inter, Helvetica, Arial, sans-serif" font-size="19" font-weight="600" fill="#1C1C1C">Fruit</text>
+    <text x="86" y="72" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13.5" fill="#75706A">The goal it chose</text>
+  </g>
+
+  <!-- bamboo -->
+  <g transform="translate(700 300)">
+    <rect width="196" height="116" rx="2" fill="#FAF8F5" stroke="#E4DFD6"/>
+    <g transform="translate(24 24)" fill="none" stroke="#C9C1B4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 48V6M25 48V14"/>
+      <path d="M6 18h10M6 32h10M20 26h10M20 38h10"/>
+      <path d="M11 12c-6 0-8-4-8-8 5 0 8 3 8 8z"/>
+    </g>
+    <text x="86" y="48" font-family="Inter, Helvetica, Arial, sans-serif" font-size="19" font-weight="600" fill="#1C1C1C">Bamboo</text>
+    <text x="86" y="72" font-family="Inter, Helvetica, Arial, sans-serif" font-size="13.5" fill="#75706A">Not this year</text>
+  </g>
+
+  <text x="940" y="238" font-family="Inter, Helvetica, Arial, sans-serif" font-size="14.5" fill="#75706A">
+    <tspan x="940" dy="0">Three routes are always open.</tspan>
+    <tspan x="940" dy="24">The elephant walks the one that</tspan>
+    <tspan x="940" dy="24">leads to what it actually needs.</tspan>
+  </text>
+</svg>
