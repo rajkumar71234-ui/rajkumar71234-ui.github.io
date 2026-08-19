@@ -66,13 +66,15 @@
         <input type="hidden" name="Scan type" id="s-mode" value="Quick scan">
 
         <div class="scanmode" role="group" aria-label="Choose how much detail to send">
-          <button type="button" class="scanmode__btn is-on" data-mode="quick" aria-pressed="true">Quick scan</button>
-          <button type="button" class="scanmode__btn" data-mode="detailed" aria-pressed="false">Detailed analysis</button>
+          <div class="scanmode__opt">
+            <p class="scanmode__cap">Quick fundamental analysis of your portfolio.</p>
+            <button type="button" class="scanmode__btn is-on" data-mode="quick" aria-pressed="true">Quick scan</button>
+          </div>
+          <div class="scanmode__opt">
+            <p class="scanmode__cap">Understand where you stand, and do a goal-specific analysis.</p>
+            <button type="button" class="scanmode__btn" data-mode="detailed" aria-pressed="false">Detailed analysis</button>
+          </div>
         </div>
-        <p class="scanmode__hint" id="scanmode-hint">
-          For a quick holding review based on fundamentals. Switch to detailed for a fuller
-          understanding of where you stand and what suits you.
-        </p>
 
         <!-- ------------------------------------------------------- about you -->
         <fieldset class="fset">
