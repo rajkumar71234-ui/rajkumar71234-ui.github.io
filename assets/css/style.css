@@ -2057,57 +2057,45 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: 100%;
   object-fit: cover;
   object-position: center 55%;
+  /* the photo already dissolves into the page inside the file — this only
+     holds it back under the words                                          */
   -webkit-mask-image: linear-gradient(to right,
-                        #000 0%, #000 4%, rgba(0,0,0,.11) 12%, rgba(0,0,0,.14) 30%,
-                        rgba(0,0,0,.27) 45%, rgba(0,0,0,.57) 58%, rgba(0,0,0,.87) 72%, #000 82%),
+                        rgba(0,0,0,.20) 0%, rgba(0,0,0,.22) 30%, rgba(0,0,0,.34) 45%,
+                        rgba(0,0,0,.62) 58%, rgba(0,0,0,.88) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
+                        #000 0%, #000 86%, rgba(0,0,0,0) 100%);
           mask-image: linear-gradient(to right,
-                        #000 0%, #000 4%, rgba(0,0,0,.11) 12%, rgba(0,0,0,.14) 30%,
-                        rgba(0,0,0,.27) 45%, rgba(0,0,0,.57) 58%, rgba(0,0,0,.87) 72%, #000 82%),
+                        rgba(0,0,0,.20) 0%, rgba(0,0,0,.22) 30%, rgba(0,0,0,.34) 45%,
+                        rgba(0,0,0,.62) 58%, rgba(0,0,0,.88) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
+                        #000 0%, #000 86%, rgba(0,0,0,0) 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
-}
-/* continuous brown edge on all four sides, above the masked photo,
-   so the border never breaks where the picture is dimmed for the text */
-.pband::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, rgba(116,96,75,.92), rgba(116,96,75,0) 34px),
-    linear-gradient(to top,    rgba(116,96,75,.92), rgba(116,96,75,0) 34px),
-    linear-gradient(to right,  rgba(116,96,75,.92), rgba(116,96,75,0) 96px),
-    linear-gradient(to left,   rgba(116,96,75,.92), rgba(116,96,75,0) 96px);
 }
 
 .pband--solutions img {
   object-position: center 62%;
   -webkit-mask-image: linear-gradient(to right,
-                        #000 0%, #000 4%, rgba(0,0,0,.07) 12%, rgba(0,0,0,.09) 30%,
-                        rgba(0,0,0,.19) 45%, rgba(0,0,0,.50) 58%, rgba(0,0,0,.85) 72%, #000 82%),
+                        rgba(0,0,0,.16) 0%, rgba(0,0,0,.18) 30%, rgba(0,0,0,.28) 45%,
+                        rgba(0,0,0,.56) 58%, rgba(0,0,0,.86) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
+                        #000 0%, #000 86%, rgba(0,0,0,0) 100%);
           mask-image: linear-gradient(to right,
-                        #000 0%, #000 4%, rgba(0,0,0,.07) 12%, rgba(0,0,0,.09) 30%,
-                        rgba(0,0,0,.19) 45%, rgba(0,0,0,.50) 58%, rgba(0,0,0,.85) 72%, #000 82%),
+                        rgba(0,0,0,.16) 0%, rgba(0,0,0,.18) 30%, rgba(0,0,0,.28) 45%,
+                        rgba(0,0,0,.56) 58%, rgba(0,0,0,.86) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
+                        #000 0%, #000 86%, rgba(0,0,0,0) 100%);
+  -webkit-mask-composite: source-in;
+          mask-composite: intersect;
 }
+
 
 @media (max-width: 900px) {
   .page-head--band { min-height: 0; padding-block: 68px 60px; }
   .pband img,
   .pband--solutions img {
     object-position: center 62%;
-    -webkit-mask-image: linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.16) 22%, rgba(0,0,0,.32) 72%,
-                          rgba(0,0,0,.32) 97%, rgba(0,0,0,0) 100%);
-            mask-image: linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.16) 22%, rgba(0,0,0,.32) 72%,
-                          rgba(0,0,0,.32) 97%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.26) 0%, rgba(0,0,0,.26) 55%, #000 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.26) 0%, rgba(0,0,0,.26) 55%, #000 100%);
   }
 }
