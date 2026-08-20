@@ -285,20 +285,21 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: 152%;
   width: auto;
   max-width: none;
-  /* faint where the text sits, stronger toward the right */
+  /* dissolves in from the left, full strength on the right, soft at the foot */
   -webkit-mask-image: linear-gradient(to right,
                         rgba(0,0,0,0) 0%, rgba(0,0,0,.08) 20%, rgba(0,0,0,.22) 40%,
                         rgba(0,0,0,.50) 58%, rgba(0,0,0,.85) 74%, #000 84%),
                       linear-gradient(to bottom,
-                        transparent 0%, #000 8%, #000 52%, transparent 72%);
+                        #000 0%, #000 86%, rgba(0,0,0,0) 100%);
           mask-image: linear-gradient(to right,
                         rgba(0,0,0,0) 0%, rgba(0,0,0,.08) 20%, rgba(0,0,0,.22) 40%,
                         rgba(0,0,0,.50) 58%, rgba(0,0,0,.85) 74%, #000 84%),
                       linear-gradient(to bottom,
-                        transparent 0%, #000 8%, #000 52%, transparent 72%);
+                        #000 0%, #000 86%, rgba(0,0,0,0) 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
 }
+
 
 
 
@@ -2026,7 +2027,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ------------------------------------------------- page band (hero-like) --
    The photograph sits BEHIND the page header, exactly like the home hero:
-   dimmed to a whisper under the text, full strength in the empty area.     */
+   dimmed to a whisper under the text, full strength in the empty area.
+   The picture carries a brown edge on all four sides, so it never meets the
+   page as a white line.                                                     */
 
 .page-head--band {
   position: relative;
@@ -2054,32 +2057,45 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: 100%;
   object-fit: cover;
   object-position: center 55%;
-  /* faint where the words are, full where the page is empty */
   -webkit-mask-image: linear-gradient(to right,
-                        rgba(0,0,0,.09) 0%, rgba(0,0,0,.12) 26%, rgba(0,0,0,.24) 42%,
-                        rgba(0,0,0,.55) 56%, rgba(0,0,0,.86) 70%, #000 80%),
+                        #000 0%, #000 4%, rgba(0,0,0,.11) 12%, rgba(0,0,0,.14) 30%,
+                        rgba(0,0,0,.27) 45%, rgba(0,0,0,.57) 58%, rgba(0,0,0,.87) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 13%, #000 78%, rgba(0,0,0,0) 100%);
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
           mask-image: linear-gradient(to right,
-                        rgba(0,0,0,.09) 0%, rgba(0,0,0,.12) 26%, rgba(0,0,0,.24) 42%,
-                        rgba(0,0,0,.55) 56%, rgba(0,0,0,.86) 70%, #000 80%),
+                        #000 0%, #000 4%, rgba(0,0,0,.11) 12%, rgba(0,0,0,.14) 30%,
+                        rgba(0,0,0,.27) 45%, rgba(0,0,0,.57) 58%, rgba(0,0,0,.87) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 13%, #000 78%, rgba(0,0,0,0) 100%);
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
 }
+/* continuous brown edge on all four sides, above the masked photo,
+   so the border never breaks where the picture is dimmed for the text */
+.pband::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom, rgba(116,96,75,.92), rgba(116,96,75,0) 34px),
+    linear-gradient(to top,    rgba(116,96,75,.92), rgba(116,96,75,0) 34px),
+    linear-gradient(to right,  rgba(116,96,75,.92), rgba(116,96,75,0) 96px),
+    linear-gradient(to left,   rgba(116,96,75,.92), rgba(116,96,75,0) 96px);
+}
+
 .pband--solutions img {
   object-position: center 62%;
   -webkit-mask-image: linear-gradient(to right,
-                        rgba(0,0,0,.05) 0%, rgba(0,0,0,.07) 28%, rgba(0,0,0,.17) 44%,
-                        rgba(0,0,0,.48) 58%, rgba(0,0,0,.84) 72%, #000 82%),
+                        #000 0%, #000 4%, rgba(0,0,0,.07) 12%, rgba(0,0,0,.09) 30%,
+                        rgba(0,0,0,.19) 45%, rgba(0,0,0,.50) 58%, rgba(0,0,0,.85) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 13%, #000 78%, rgba(0,0,0,0) 100%);
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
           mask-image: linear-gradient(to right,
-                        rgba(0,0,0,.05) 0%, rgba(0,0,0,.07) 28%, rgba(0,0,0,.17) 44%,
-                        rgba(0,0,0,.48) 58%, rgba(0,0,0,.84) 72%, #000 82%),
+                        #000 0%, #000 4%, rgba(0,0,0,.07) 12%, rgba(0,0,0,.09) 30%,
+                        rgba(0,0,0,.19) 45%, rgba(0,0,0,.50) 58%, rgba(0,0,0,.85) 72%, #000 82%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 13%, #000 78%, rgba(0,0,0,0) 100%);
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
 }
 
 @media (max-width: 900px) {
@@ -2088,10 +2104,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   .pband--solutions img {
     object-position: center 62%;
     -webkit-mask-image: linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.14) 26%, rgba(0,0,0,.30) 74%,
-                          rgba(0,0,0,.10) 94%, rgba(0,0,0,0) 100%);
+                          rgba(0,0,0,0) 0%, rgba(0,0,0,.16) 22%, rgba(0,0,0,.32) 72%,
+                          rgba(0,0,0,.32) 97%, rgba(0,0,0,0) 100%);
             mask-image: linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.14) 26%, rgba(0,0,0,.30) 74%,
-                          rgba(0,0,0,.10) 94%, rgba(0,0,0,0) 100%);
+                          rgba(0,0,0,0) 0%, rgba(0,0,0,.16) 22%, rgba(0,0,0,.32) 72%,
+                          rgba(0,0,0,.32) 97%, rgba(0,0,0,0) 100%);
   }
 }
