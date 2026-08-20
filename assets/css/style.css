@@ -2134,3 +2134,80 @@ ul { margin: 0; padding: 0; list-style: none; }
   .section--why { min-height: 0; padding-bottom: 260px; }
   .wband img { object-position: center bottom; }
 }
+
+/* ------------------------------------------------------------- the walk --
+   One elephant crossing the top of the contact page, left to right.
+   Drawn, not photographed, so the gait can actually move.                 */
+
+.walk {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  pointer-events: none;
+}
+.walk__haze {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 62px;
+  background: linear-gradient(to bottom,
+                rgba(150,128,104,0) 0%, rgba(150,128,104,.05) 55%,
+                rgba(150,128,104,.11) 88%, rgba(150,128,104,0) 100%);
+}
+.walk__mover {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 244px;
+  animation: mw-cross 34s linear infinite;
+}
+.walk__svg { display: block; width: 100%; height: auto; }
+.walk + .section { padding-top: 34px; }
+
+.e-body      { fill: url(#mwHide); }
+.e-leg       { fill: #9B8872; }
+.e-leg--hf,
+.e-leg--ff   { fill: #82705C; }
+.e-ear       { fill: #AF9D87; }
+.e-tail      { stroke: #9B8872; }
+.e-tusk      { fill: #E6DCCB; }
+.e-ear__in   { fill: #8B7965; opacity: .15; }
+.e-shadow    { fill: rgba(126,104,82,.13); }
+
+@keyframes mw-cross {
+  from { transform: translateX(-24vw); }
+  to   { transform: translateX(102vw); }
+}
+
+/* stance is long and planted, the swing forward is quick and lifted */
+@keyframes mw-step {
+  0%   { transform: rotate(15deg)  translateY(0); }
+  58%  { transform: rotate(-15deg) translateY(0); }
+  72%  { transform: rotate(-6deg)  translateY(-5px); }
+  88%  { transform: rotate(9deg)   translateY(-2px); }
+  100% { transform: rotate(15deg)  translateY(0); }
+}
+@keyframes mw-bob   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2.5px); } }
+@keyframes mw-ear   { 0%,100% { transform: rotate(-4deg); } 50% { transform: rotate(5deg); } }
+@keyframes mw-tail  { 0%,100% { transform: rotate(7deg); }  50% { transform: rotate(-8deg); } }
+
+.e-leg {
+  transform-box: view-box;
+  animation: mw-step 1.9s cubic-bezier(.44,.02,.56,.98) infinite;
+}
+.e-leg--fn { animation-delay: 0s; }
+.e-leg--hf { animation-delay: -0.475s; }
+.e-leg--ff { animation-delay: -0.95s; }
+.e-leg--hn { animation-delay: -1.425s; }
+
+.e-body, .e-tusk { animation: mw-bob 0.95s ease-in-out infinite; }
+.e-ear  { transform-box: view-box; animation: mw-ear 1.9s ease-in-out infinite; }
+.e-tail { transform-box: view-box; animation: mw-tail 3.1s ease-in-out infinite; }
+
+@media (max-width: 900px) {
+  .walk { height: 130px; }
+  .walk__mover { width: 142px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .walk__mover { animation: none; left: 8%; }
+  .e-leg, .e-body, .e-tusk, .e-ear, .e-tail { animation: none; }
+}
