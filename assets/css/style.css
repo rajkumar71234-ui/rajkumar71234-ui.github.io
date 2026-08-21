@@ -2054,6 +2054,8 @@ ul { margin: 0; padding: 0; list-style: none; }
    page as a white line.                                                     */
 
 .page-head--band {
+  background: linear-gradient(to bottom,
+                var(--bg-alt) 0%, var(--bg-alt) 68%, var(--bg) 100%);
   position: relative;
   overflow: hidden;
   border-bottom: 0;
@@ -2079,33 +2081,34 @@ ul { margin: 0; padding: 0; list-style: none; }
   height: 100%;
   object-fit: cover;
   object-position: center 55%;
-  /* full strength everywhere; held back only in the pocket behind the words */
-  -webkit-mask-image: radial-gradient(ellipse 36% 46% at 32% 50%,
-                        rgba(0,0,0,.13) 0%, rgba(0,0,0,.17) 52%, rgba(0,0,0,.42) 76%,
-                        rgba(0,0,0,.78) 92%, #000 100%),
-                      linear-gradient(to bottom, #000 0%, #000 88%, rgba(0,0,0,0) 100%);
-          mask-image: radial-gradient(ellipse 36% 46% at 32% 50%,
-                        rgba(0,0,0,.13) 0%, rgba(0,0,0,.17) 52%, rgba(0,0,0,.42) 76%,
-                        rgba(0,0,0,.78) 92%, #000 100%),
-                      linear-gradient(to bottom, #000 0%, #000 88%, rgba(0,0,0,0) 100%);
+  /* faint behind the words, full colour where the page is empty; top and
+     bottom dissolve into the page so no edge ever lands on a line        */
+  -webkit-mask-image: linear-gradient(to right,
+                        rgba(0,0,0,.11) 0%, rgba(0,0,0,.13) 26%, rgba(0,0,0,.28) 42%,
+                        rgba(0,0,0,.58) 56%, rgba(0,0,0,.88) 70%, #000 80%),
+                      linear-gradient(to bottom,
+                        rgba(0,0,0,0) 0%, #000 9%, #000 62%, rgba(0,0,0,.62) 80%, rgba(0,0,0,.22) 92%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(to right,
+                        rgba(0,0,0,.11) 0%, rgba(0,0,0,.13) 26%, rgba(0,0,0,.28) 42%,
+                        rgba(0,0,0,.58) 56%, rgba(0,0,0,.88) 70%, #000 80%),
+                      linear-gradient(to bottom,
+                        rgba(0,0,0,0) 0%, #000 9%, #000 62%, rgba(0,0,0,.62) 80%, rgba(0,0,0,.22) 92%, rgba(0,0,0,0) 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
 }
-
-
 .pband--solutions img {
   object-position: center 62%;
-  -webkit-mask-image: radial-gradient(ellipse 34% 40% at 31% 50%,
-                        rgba(0,0,0,.11) 0%, rgba(0,0,0,.15) 52%, rgba(0,0,0,.40) 76%,
-                        rgba(0,0,0,.76) 92%, #000 100%),
-                      linear-gradient(to bottom, #000 0%, #000 88%, rgba(0,0,0,0) 100%);
-          mask-image: radial-gradient(ellipse 34% 40% at 31% 50%,
-                        rgba(0,0,0,.11) 0%, rgba(0,0,0,.15) 52%, rgba(0,0,0,.40) 76%,
-                        rgba(0,0,0,.76) 92%, #000 100%),
-                      linear-gradient(to bottom, #000 0%, #000 88%, rgba(0,0,0,0) 100%);
+  -webkit-mask-image: linear-gradient(to right,
+                        rgba(0,0,0,.07) 0%, rgba(0,0,0,.09) 28%, rgba(0,0,0,.20) 44%,
+                        rgba(0,0,0,.52) 58%, rgba(0,0,0,.86) 72%, #000 82%),
+                      linear-gradient(to bottom,
+                        rgba(0,0,0,0) 0%, #000 9%, #000 62%, rgba(0,0,0,.62) 80%, rgba(0,0,0,.22) 92%, rgba(0,0,0,0) 100%);
+          mask-image: linear-gradient(to right,
+                        rgba(0,0,0,.07) 0%, rgba(0,0,0,.09) 28%, rgba(0,0,0,.20) 44%,
+                        rgba(0,0,0,.52) 58%, rgba(0,0,0,.86) 72%, #000 82%),
+                      linear-gradient(to bottom,
+                        rgba(0,0,0,0) 0%, #000 9%, #000 62%, rgba(0,0,0,.62) 80%, rgba(0,0,0,.22) 92%, rgba(0,0,0,0) 100%);
 }
-
-
 
 @media (max-width: 900px) {
   .page-head--band { min-height: 0; padding-block: 68px 60px; }
