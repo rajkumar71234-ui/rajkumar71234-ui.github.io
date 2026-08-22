@@ -965,13 +965,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 780px) {
   /* the animal sits behind the copy on small screens too - one block, not a
      separate band below it                                                  */
-  .hero { padding-bottom: clamp(74px, 14vw, 120px); }
+  .hero { padding-bottom: clamp(40px, 10vw, 92px); }
   .hero__media { opacity: 1; }
   .hero__media img {
-    right: -14%;
+    right: -46px;
     top: auto;
     bottom: 0;
-    height: clamp(196px, 52vw, 300px);
+    height: clamp(200px, 54vw, 310px);
     width: auto;
   }
   .booking { padding-block: 62px; }
@@ -1630,13 +1630,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 @media (max-width: 780px) {
   /* the animal sits behind the copy on small screens too - one block, not a
      separate band below it                                                  */
-  .hero { padding-bottom: clamp(74px, 14vw, 120px); }
+  .hero { padding-bottom: clamp(40px, 10vw, 92px); }
   .hero__media { opacity: 1; }
   .hero__media img {
-    right: -14%;
+    right: -46px;
     top: auto;
     bottom: 0;
-    height: clamp(196px, 52vw, 300px);
+    height: clamp(200px, 54vw, 310px);
     width: auto;
   }
   .booking { padding-block: 62px; }
