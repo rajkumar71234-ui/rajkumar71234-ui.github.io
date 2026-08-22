@@ -211,8 +211,23 @@
   var btn  = document.querySelector(".hero__actions .btn, .hero__actions a");
   if (!img || !hero || !btn) return;
 
+  var acts = document.querySelector(".hero__actions");
+
   function align() {
-    if (window.matchMedia("(max-width: 780px)").matches) { img.style.bottom = ""; return; }
+    img.style.height = "";                       /* back to the stylesheet value */
+
+    if (window.matchMedia("(max-width: 780px)").matches) {
+      /* phones: the animal sits behind the buttons, never over the paragraph */
+      img.style.bottom = "";
+      if (!acts) return;
+      var lead  = document.querySelector(".hero__text .lead:last-of-type") ||
+                  acts.previousElementSibling || acts;
+      var css   = img.getBoundingClientRect().height;
+      var room  = hero.getBoundingClientRect().bottom - lead.getBoundingClientRect().bottom + 12;
+      if (css && room > 120 && room < css) img.style.height = room.toFixed(1) + "px";
+      return;
+    }
+
     var h = img.getBoundingClientRect().height;
     if (!h) return;
     var bottom = hero.getBoundingClientRect().bottom
