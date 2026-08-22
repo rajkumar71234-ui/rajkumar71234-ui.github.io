@@ -280,23 +280,21 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .hero__media img {
   position: absolute;
-  right: 2%;
-  bottom: 4%;
-  height: 78%;
+  right: 0;
+  bottom: 14.6%;
+  height: clamp(370px, 33vw, 560px);
   width: auto;
   max-width: none;
-  /* dissolves in from the left behind the copy, full strength on the right,
-     and the ground softens away at the foot                                */
+  /* full strength - the photograph's own ground already matches the page, so
+     only the outermost sliver is feathered to guarantee no visible rectangle */
   -webkit-mask-image: linear-gradient(to right,
-                        rgba(0,0,0,0) 0%, rgba(0,0,0,.12) 16%, rgba(0,0,0,.34) 32%,
-                        rgba(0,0,0,.66) 48%, rgba(0,0,0,.90) 62%, #000 72%),
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 7%, #000 82%, rgba(0,0,0,0) 100%);
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
           mask-image: linear-gradient(to right,
-                        rgba(0,0,0,0) 0%, rgba(0,0,0,.12) 16%, rgba(0,0,0,.34) 32%,
-                        rgba(0,0,0,.66) 48%, rgba(0,0,0,.90) 62%, #000 72%),
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%),
                       linear-gradient(to bottom,
-                        rgba(0,0,0,0) 0%, #000 7%, #000 82%, rgba(0,0,0,0) 100%);
+                        rgba(0,0,0,0) 0%, #000 3%, #000 97%, rgba(0,0,0,0) 100%);
   -webkit-mask-composite: source-in;
           mask-composite: intersect;
 }
@@ -957,24 +955,24 @@ ul { margin: 0; padding: 0; list-style: none; }
   .trait__media { width: 74px; height: 74px; }
 }
 
+@media (max-width: 1080px) and (min-width: 781px) {
+  /* narrow desktop and tablet: the copy needs the width back, so the animal
+     tucks lower and smaller while staying in the same block                */
+  .hero__media img { right: -4%; bottom: 6%; height: 46%; }
+  .hero .lead { max-width: 60%; }
+}
+
 @media (max-width: 780px) {
-  /* stays a background wash on small screens so the copy reads cleanly */
-  .hero__media { opacity: .17; }
-  .hero__media img { right: -3%; top: auto; bottom: 0; height: 40%; }
+  /* the animal sits behind the copy on small screens too - one block, not a
+     separate band below it                                                  */
+  .hero { padding-bottom: clamp(74px, 14vw, 120px); }
+  .hero__media { opacity: 1; }
   .hero__media img {
-    /* no straight cut anywhere - every side dissolves into the page */
-    -webkit-mask-image: linear-gradient(to right,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 14%, #000 34%),
-                        linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 22%, #000 40%,
-                          #000 84%, rgba(0,0,0,0) 100%);
-            mask-image: linear-gradient(to right,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 14%, #000 34%),
-                        linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 22%, #000 40%,
-                          #000 84%, rgba(0,0,0,0) 100%);
-    -webkit-mask-composite: source-in;
-            mask-composite: intersect;
+    right: -14%;
+    top: auto;
+    bottom: 0;
+    height: clamp(196px, 52vw, 300px);
+    width: auto;
   }
   .booking { padding-block: 62px; }
   .booking__media { display: none; }
@@ -1630,23 +1628,16 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 
 @media (max-width: 780px) {
-  /* stays a background wash on small screens so the copy reads cleanly */
-  .hero__media { opacity: .17; }
-  .hero__media img { right: -3%; top: auto; bottom: 0; height: 40%; }
+  /* the animal sits behind the copy on small screens too - one block, not a
+     separate band below it                                                  */
+  .hero { padding-bottom: clamp(74px, 14vw, 120px); }
+  .hero__media { opacity: 1; }
   .hero__media img {
-    /* no straight cut anywhere - every side dissolves into the page */
-    -webkit-mask-image: linear-gradient(to right,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 14%, #000 34%),
-                        linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 22%, #000 40%,
-                          #000 84%, rgba(0,0,0,0) 100%);
-            mask-image: linear-gradient(to right,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.35) 14%, #000 34%),
-                        linear-gradient(to bottom,
-                          rgba(0,0,0,0) 0%, rgba(0,0,0,.45) 22%, #000 40%,
-                          #000 84%, rgba(0,0,0,0) 100%);
-    -webkit-mask-composite: source-in;
-            mask-composite: intersect;
+    right: -14%;
+    top: auto;
+    bottom: 0;
+    height: clamp(196px, 52vw, 300px);
+    width: auto;
   }
   .booking { padding-block: 62px; }
   .booking__media { display: none; }
@@ -2098,7 +2089,7 @@ ul { margin: 0; padding: 0; list-style: none; }
           mask-composite: intersect;
 }
 .pband--solutions img {
-  object-position: center 62%;
+  object-position: center 45%;
   -webkit-mask-image: linear-gradient(to right,
                         rgba(0,0,0,.07) 0%, rgba(0,0,0,.09) 28%, rgba(0,0,0,.20) 44%,
                         rgba(0,0,0,.52) 58%, rgba(0,0,0,.86) 72%, #000 82%),
@@ -2115,7 +2106,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   .page-head--band { min-height: 0; padding-block: 68px 60px; }
   .pband img,
   .pband--solutions img {
-    object-position: center 62%;
+    object-position: center 45%;
     -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.26) 0%, rgba(0,0,0,.26) 55%, #000 100%);
             mask-image: linear-gradient(to bottom, rgba(0,0,0,.26) 0%, rgba(0,0,0,.26) 55%, #000 100%);
   }
@@ -2169,7 +2160,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .walk {
   position: relative;
-  height: 200px;
+  height: 244px;
   overflow: hidden;
   pointer-events: none;
 }
@@ -2185,22 +2176,17 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 244px;
+  width: 322px;
   animation: mw-cross 34s linear infinite;
 }
 .walk__svg { display: block; width: 100%; height: auto; }
 .walk + .section { padding-top: 34px; }
 
-/* one flat colour for the whole animal - no gradient, no shading */
-.e-body, .e-leg, .e-ear   { fill: var(--brown); }
-.e-tail, .e-ear__edge     { stroke: var(--brown); fill: none; }
-.e-cut                    { fill: var(--bg); }            /* tusk and eye cut out of the silhouette */
-.e-ear__edge              { stroke: var(--bg); }
-.e-shadow                 { fill: rgba(116,96,75,.12); }
-
-/* the far pair sits back in the same colour, just lighter, so the legs read
-   apart without introducing a second colour */
-.e-far { opacity: .5; }
+/* one flat colour, traced from the reference outline */
+.sil        { fill: var(--brown); fill-rule: evenodd; }
+.e-leg path { fill: var(--brown); }
+.e-far      { opacity: .5; }
+.e-shadow   { fill: rgba(116,96,75,.12); }
 
 @keyframes mw-cross {
   from { transform: translateX(-24vw); }
@@ -2243,8 +2229,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .e-tail { transform-box: view-box; animation: mw-tail 3.1s ease-in-out infinite; }
 
 @media (max-width: 900px) {
-  .walk { height: 130px; }
-  .walk__mover { width: 142px; }
+  .walk { height: 152px; }
+  .walk__mover { width: 196px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .walk__mover { animation: none; left: 8%; }
