@@ -128,20 +128,12 @@
   if (scanForm) {
     var modeBtns = [].slice.call(scanForm.querySelectorAll(".scanmode__btn"));
     var modeInput = document.getElementById("s-mode");
-    var hint = document.getElementById("scanmode-hint");
 
-    var TEXT = {
-      quick: "Quick scan: six things and your statement, and we tell you what overlaps and what " +
-             "it is costing you. Switch to detailed if you want the gap to a specific goal worked out too.",
-      detailed: "Detailed analysis: the full picture — dependants, income, EMIs, what you can put " +
-                "away and the goal you are aiming at. You get the gap to the goal in rupees, not just a review."
-    };
 
     function setMode(mode) {
       var quick = mode === "quick";
       scanForm.classList.toggle("form--quick", quick);
       if (modeInput) modeInput.value = quick ? "Quick scan" : "Detailed analysis";
-      if (hint) hint.textContent = TEXT[mode];
 
       modeBtns.forEach(function (b) {
         var on = b.getAttribute("data-mode") === mode;
@@ -204,3 +196,35 @@
     });
   }
 })();
+
+/* =========================================================================
+   Hero elephant — plant the feet on the bottom edge of the first button.
+   The hero is sized from the viewport height, so a CSS percentage drifts as
+   the window changes; this measures instead.
+   ========================================================================= */
+(function () {
+  "use strict";
+
+  var FEET = 0.9675;                       /* where the feet sit in the file */
+  var img  = document.querySelector(".hero__media img");
+  var hero = document.querySelector(".hero");
+  var btn  = document.querySelector(".hero__actions .btn, .hero__actions a");
+  if (!img || !hero || !btn) return;
+
+  function align() {
+    if (window.matchMedia("(max-width: 780px)").matches) { img.style.bottom = ""; return; }
+    var h = img.getBoundingClientRect().height;
+    if (!h) return;
+    var bottom = hero.getBoundingClientRect().bottom
+               - btn.getBoundingClientRect().bottom
+               - h * (1 - FEET);
+    img.style.bottom = bottom.toFixed(1) + "px";
+  }
+
+  if (img.complete) align(); else img.addEventListener("load", align);
+  window.addEventListener("resize", align);
+  window.addEventListener("orientationchange", align);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+  window.addEventListener("load", align);
+})();
+
