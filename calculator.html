@@ -55,7 +55,19 @@
     </div>
   </section>
 
-  <section class="section">
+
+  <section class="section" style="padding-bottom:0">
+    <div class="shell">
+      <div class="ctabs" role="tablist" aria-label="Choose a calculator">
+        <button class="ctab is-on" role="tab" aria-selected="true"  data-panel="goal">Goal planner</button>
+        <button class="ctab"       role="tab" aria-selected="false" data-panel="lumpsum">Lumpsum</button>
+        <button class="ctab"       role="tab" aria-selected="false" data-panel="stepup">SIP with step-up</button>
+        <button class="ctab"       role="tab" aria-selected="false" data-panel="retire">Retirement &amp; SWP</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section cpanel" id="panel-goal">
     <div class="shell">
       <div class="calc">
 
@@ -219,9 +231,176 @@
     </div>
   </section>
 
+
+  <!-- ============================================================ lumpsum -->
+  <section class="section cpanel" id="panel-lumpsum" hidden>
+    <div class="shell">
+      <div class="calc">
+        <form class="calc__form form" id="lump-form" novalidate>
+          <fieldset class="fset">
+            <legend class="fset__legend">One-time investment</legend>
+            <div class="field--row">
+              <div class="field">
+                <label for="l-amount">Amount invested</label>
+                <input type="number" id="l-amount" min="0" step="10000" value="1000000">
+              </div>
+              <div class="field">
+                <label for="l-years">Years held</label>
+                <input type="number" id="l-years" min="1" max="50" value="10">
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label for="l-rate">Expected return (% a year)</label>
+                <input type="number" id="l-rate" min="0" max="30" step="0.5" value="12">
+              </div>
+              <div class="field">
+                <label for="l-infl">Inflation (% a year)</label>
+                <input type="number" id="l-infl" min="0" max="15" step="0.5" value="6">
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <aside class="calc__out">
+          <p class="calc__verdict" id="l-verdict"></p>
+          <dl class="calc__stats">
+            <div class="calc__stat"><dt>Value at the end</dt><dd id="l-value">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Amount invested</dt><dd id="l-invested">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Growth</dt><dd id="l-growth">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Worth in today&rsquo;s money</dt><dd id="l-real">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Times your money</dt><dd id="l-mult">&mdash;</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= step-up -->
+  <section class="section cpanel" id="panel-stepup" hidden>
+    <div class="shell">
+      <div class="calc">
+        <form class="calc__form form" id="step-form" novalidate>
+          <fieldset class="fset">
+            <legend class="fset__legend">Monthly investment</legend>
+            <div class="field--row">
+              <div class="field">
+                <label for="s-sip">Starting SIP a month</label>
+                <input type="number" id="s-sip" min="0" step="500" value="20000">
+              </div>
+              <div class="field">
+                <label for="s-step">Step up every year by (%)</label>
+                <input type="number" id="s-step" min="0" max="50" step="1" value="10">
+                <p class="field__hint">Raise the SIP each year as your income rises.</p>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label for="s-years">Years</label>
+                <input type="number" id="s-years" min="1" max="50" value="15">
+              </div>
+              <div class="field">
+                <label for="s-rate">Expected return (% a year)</label>
+                <input type="number" id="s-rate" min="0" max="30" step="0.5" value="12">
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <aside class="calc__out">
+          <p class="calc__verdict" id="s-verdict"></p>
+          <dl class="calc__stats">
+            <div class="calc__stat"><dt>Value at the end</dt><dd id="s-value">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Total you put in</dt><dd id="s-invested">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Growth</dt><dd id="s-growth">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Last year&rsquo;s SIP</dt><dd id="s-last">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Without the step-up</dt><dd id="s-flat">&mdash;</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================== retirement -->
+  <section class="section cpanel" id="panel-retire" hidden>
+    <div class="shell">
+      <div class="calc">
+        <form class="calc__form form" id="ret-form" novalidate>
+          <fieldset class="fset">
+            <legend class="fset__legend">Where you are</legend>
+            <div class="field--row">
+              <div class="field">
+                <label for="r-age">Age now</label>
+                <input type="number" id="r-age" min="18" max="75" value="35">
+              </div>
+              <div class="field">
+                <label for="r-retire">Retirement age</label>
+                <input type="number" id="r-retire" min="35" max="80" value="60">
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label for="r-life">Plan until age</label>
+                <input type="number" id="r-life" min="60" max="105" value="85">
+              </div>
+              <div class="field">
+                <label for="r-expense">Monthly expense today</label>
+                <input type="number" id="r-expense" min="0" step="1000" value="60000">
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="fset">
+            <legend class="fset__legend">What you are putting in</legend>
+            <div class="field--row">
+              <div class="field">
+                <label for="r-corpus">Corpus you already have</label>
+                <input type="number" id="r-corpus" min="0" step="10000" value="1500000">
+              </div>
+              <div class="field">
+                <label for="r-sip">SIP a month until retirement</label>
+                <input type="number" id="r-sip" min="0" step="500" value="25000">
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label for="r-pre">Return before retirement (%)</label>
+                <input type="number" id="r-pre" min="0" max="25" step="0.5" value="12">
+              </div>
+              <div class="field">
+                <label for="r-post">Return after retirement (%)</label>
+                <input type="number" id="r-post" min="0" max="20" step="0.5" value="7">
+                <p class="field__hint">Lower, because the money has to be safer once you are drawing on it.</p>
+              </div>
+            </div>
+            <div class="field--row">
+              <div class="field">
+                <label for="r-infl">Inflation (% a year)</label>
+                <input type="number" id="r-infl" min="0" max="15" step="0.5" value="6">
+              </div>
+            </div>
+          </fieldset>
+        </form>
+
+        <aside class="calc__out">
+          <p class="calc__verdict" id="r-verdict"></p>
+          <dl class="calc__stats">
+            <div class="calc__stat"><dt>Corpus you will have</dt><dd id="r-have">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Corpus you need</dt><dd id="r-need">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Gap</dt><dd id="r-gap">&mdash;</dd></div>
+            <div class="calc__stat"><dt>First month&rsquo;s withdrawal</dt><dd id="r-draw">&mdash;</dd></div>
+            <div class="calc__stat"><dt>SIP needed to close the gap</dt><dd id="r-sipneed">&mdash;</dd></div>
+            <div class="calc__stat"><dt>Money runs out at age</dt><dd id="r-runout">&mdash;</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <script src="assets/js/main.js"></script>
 <script src="assets/js/calc.js"></script>
+<script src="assets/js/calc-tools.js"></script>
 </body>
 </html>
