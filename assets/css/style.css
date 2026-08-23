@@ -2262,3 +2262,40 @@ ul { margin: 0; padding: 0; list-style: none; }
   max-width: 42ch;
 }
 .footer__quote cite { font-style: normal; white-space: nowrap; }
+
+/* --------------------------------------------------------- calculator tabs -- */
+.ctabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 0;
+}
+.ctab {
+  appearance: none;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  background: var(--bg-alt);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 13px 20px;
+  cursor: pointer;
+  border-radius: 3px 3px 0 0;
+  margin-bottom: -1px;
+  transition: color .15s, background .15s;
+}
+.ctab:hover { color: var(--ink); }
+.ctab.is-on {
+  background: var(--bg);
+  color: var(--ink);
+  border-color: var(--line);
+  border-bottom: 1px solid var(--bg);
+}
+.cpanel[hidden] { display: none; }
+
+@media (max-width: 780px) {
+  .ctabs { gap: 6px; }
+  .ctab { flex: 1 1 45%; padding: 12px 10px; font-size: 0.86rem; text-align: center; }
+}
