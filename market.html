@@ -49,44 +49,176 @@
       <h1 class="h1 balance">What the market is doing, and what it means for your goal.</h1>
       <p class="lead">
         Markets move every day. Most of that movement does not change what you should do.
-        This page is where we set out what we are watching and what we are deliberately ignoring.
+        Everything on this page is live &mdash; nothing here is a number we typed in by hand.
       </p>
     </div>
   </section>
 
-  <!-- ========================================================== watching -->
+  <!-- ======================================================== index board -->
+  <section class="section">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Where the indices stand</span>
+        <h2 class="h2 balance">Today, and the long run.</h2>
+        <p>Click any row to open its full history, including one, three, five and ten year returns.</p>
+      </div>
+        <div class="tvbox" style="height:560px">
+          <div class="tradingview-widget-container" style="height:100%">
+            <div class="tradingview-widget-container__widget" style="height:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+            {
+              "width": "100%", "height": "100%", "colorTheme": "light", "isTransparent": true,
+              "locale": "in",
+              "symbolsGroups": [
+                { "name": "India", "symbols": [
+                  { "name": "NSE:NIFTY", "displayName": "Nifty 50" },
+                  { "name": "BSE:SENSEX", "displayName": "Sensex" },
+                  { "name": "NSE:CNX100", "displayName": "Nifty 100 — large cap" },
+                  { "name": "NSE:NIFTY_MIDCAP_100", "displayName": "Nifty Midcap" },
+                  { "name": "NSE:NIFTYSMLCAP250", "displayName": "Nifty Smallcap 250" },
+                  { "name": "NSE:CNX500", "displayName": "Nifty 500" }
+                ]},
+                { "name": "Gold and global", "symbols": [
+                  { "name": "TVC:GOLD", "displayName": "Gold (spot, USD)" },
+                  { "name": "MCX:GOLD1!", "displayName": "Gold (MCX)" },
+                  { "name": "NASDAQ:IXIC", "displayName": "Nasdaq Composite" }
+                ]}
+              ]
+            }
+            </script>
+          </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- ==================================================== the long picture -->
+  <section class="section section--alt">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">The long picture</span>
+        <h2 class="h2 balance">Sensex against gold, over decades.</h2>
+        <p>Set the range to ALL to see the whole history. Add or remove a comparison from the
+           chart&rsquo;s own symbol box &mdash; a fixed deposit sits at the flat line either of them
+           has to beat.</p>
+      </div>
+        <div class="tvbox" style="height:520px">
+          <div class="tradingview-widget-container" style="height:100%">
+            <div class="tradingview-widget-container__widget" style="height:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {
+              "width": "100%", "height": "100%", "symbol": "BSE:SENSEX",
+              "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
+              "locale": "in", "hide_side_toolbar": true, "allow_symbol_change": true,
+              "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
+              "compareSymbols": [
+                { "symbol": "TVC:GOLD", "position": "SameScale" }
+              ],
+              "range": "ALL", "calendar": false, "support_host": "https://www.tradingview.com"
+            }
+            </script>
+          </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= rates and CPI -->
+  <section class="section">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Money and prices</span>
+        <h2 class="h2 balance">What money costs, and what it buys.</h2>
+        <p>The repo rate is the price of money. Inflation is what it loses while you hold it.
+           A plan only works if the return clears the second one.</p>
+      </div>
+
+      <div class="grid grid--split" style="align-items:start; gap:34px">
+        <div>
+        <div class="tvbox" style="height:330px">
+          <div class="tradingview-widget-container" style="height:100%">
+            <div class="tradingview-widget-container__widget" style="height:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+            {
+              "width": "100%", "height": "100%", "colorTheme": "light", "isTransparent": true,
+              "locale": "in", "showSymbolLogo": false,
+              "symbolsGroups": [
+                { "name": "Policy rates", "symbols": [
+                  { "name": "ECONOMICS:ININTR", "displayName": "India — RBI repo rate" },
+                  { "name": "ECONOMICS:USINTR", "displayName": "United States — Fed funds" }
+                ]},
+                { "name": "Inflation, year on year", "symbols": [
+                  { "name": "ECONOMICS:INIRYY", "displayName": "India — CPI inflation" },
+                  { "name": "ECONOMICS:USIRYY", "displayName": "United States — CPI inflation" }
+                ]}
+              ]
+            }
+            </script>
+          </div>
+        </div>
+        </div>
+        <div>
+        <div class="tvbox" style="height:330px">
+          <div class="tradingview-widget-container" style="height:100%">
+            <div class="tradingview-widget-container__widget" style="height:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {
+              "width": "100%", "height": "100%", "symbol": "ECONOMICS:INIRYY",
+              "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
+              "locale": "in", "hide_side_toolbar": true, "allow_symbol_change": true,
+              "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
+              "compareSymbols": [ { "symbol": "ECONOMICS:ININTR", "position": "SameScale" } ],
+              "range": "ALL", "calendar": false, "support_host": "https://www.tradingview.com"
+            }
+            </script>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================================== news -->
+  <section class="section section--alt">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Why it moved</span>
+        <h2 class="h2 balance">The reasons behind the day.</h2>
+        <p>A price move without a reason is noise. This is the live wire on the indices above.</p>
+      </div>
+        <div class="tvbox" style="height:520px">
+          <div class="tradingview-widget-container" style="height:100%">
+            <div class="tradingview-widget-container__widget" style="height:100%"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+            {
+              "feedMode": "market", "market": "index", "isTransparent": true,
+              "displayMode": "regular", "width": "100%", "height": "100%",
+              "colorTheme": "light", "locale": "in"
+            }
+            </script>
+          </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ closing -->
   <section class="section">
     <div class="shell grid grid--split">
       <div class="reveal">
-        <span class="eyebrow">What we watch</span>
-        <h2 class="h2 balance">A short list, checked often.</h2>
+        <span class="eyebrow">How we read it</span>
+        <h2 class="h2 balance">Slow, but in the right direction.</h2>
       </div>
       <div class="reveal">
-        <p class="lead">Where the cycle sits, what money is costing, and what is already priced in.</p>
-        <p>An elephant does not move for every sound in the forest. It moves when there is
-          a reason. We read the market the same way &mdash; the point is not to react to
-          the day, it is to know whether anything has changed for your goal.</p>
+        <p class="lead">An elephant does not move for every sound in the forest. It moves when
+          there is a reason.</p>
+        <p>We read the market the same way. The question is never what the index did today &mdash;
+          it is whether anything has changed for the goal you wrote down, and whether the money is
+          still parked where that goal needs it.</p>
+        <p class="hero__actions" style="margin-top:26px">
+          <a class="btn btn--accent" href="contact.html">Connect with us</a>
+          <a class="btn btn--brown" href="scan.html">Scan my portfolio</a>
+        </p>
+        <p class="tvcredit">Live market data and charts by
+          <a href="https://www.tradingview.com/" rel="noopener" target="_blank">TradingView</a>.</p>
       </div>
-    </div>
-  </section>
-
-  <!-- ============================================================ notes -->
-  <section class="section section--alt">
-    <div class="shell">
-      <span class="eyebrow">Market notes</span>
-      <h2 class="h2 balance">Notes will appear here.</h2>
-      <p class="lead" style="max-width:640px">
-        This is where the periodic market note will sit &mdash; a short written view, dated,
-        with the reasoning behind any change we make to a plan.
-      </p>
-      <p style="max-width:640px">
-        Until the first note is published, the fastest way to get a read on your own position
-        is the portfolio scan, or a direct conversation.
-      </p>
-      <p class="hero__actions" style="margin-top:30px">
-        <a class="btn btn--brown" href="scan.html">Scan my portfolio</a>
-        <a class="btn btn--accent" href="contact.html">Connect with us</a>
-      </p>
     </div>
   </section>
 
