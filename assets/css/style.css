@@ -2326,3 +2326,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .tvcredit { font-size: 0.82rem; color: var(--muted); margin-top: 22px; }
 .tvcredit a { color: var(--muted); }
 @media (max-width: 780px) { .tvbox { margin-top: 22px; } }
+
+/* per page: lift the animal, and pull the scan illustration back a little */
+.pband--calc img      { object-position: center 92%; }
+.pband--solutions img { object-position: center 88%; }
+.pband--scan img      { object-position: center 92%; }
