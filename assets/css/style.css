@@ -2343,12 +2343,12 @@ ul { margin: 0; padding: 0; list-style: none; }
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   table-layout: fixed;
 }
-.rettable th, .rettable td { padding: 12px 8px; text-align: right; white-space: nowrap; }
-.rettable th:first-child, .rettable td:first-child { width: 20%; padding-left: 16px; }
-.rettable th:not(:first-child), .rettable td:not(:first-child) { width: 8%; }
+.rettable th, .rettable td { padding: 12px 5px; text-align: right; white-space: nowrap; }
+.rettable th:first-child, .rettable td:first-child { width: 17%; padding-left: 16px; }
+.rettable th:not(:first-child), .rettable td:not(:first-child) { width: 6.4%; }
 .rettable td:last-child, .rettable th:last-child { padding-right: 16px; }
 
 /* the header row stays put while the numbers scroll under it */
