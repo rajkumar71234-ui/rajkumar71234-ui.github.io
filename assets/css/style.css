@@ -2576,3 +2576,27 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 @media (max-width: 900px) { .facts { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 520px) { .facts { grid-template-columns: 1fr; } }
+
+/* --------------------------------------------------- market: sector table */
+
+.facts--4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .facts--4 { grid-template-columns: repeat(2, 1fr); } }
+
+.sectable th:first-child, .sectable td:first-child { width: 26%; }
+.sectable th:nth-child(2), .sectable td:nth-child(2) { width: 11%; }
+.sectable th:nth-child(3), .sectable td:nth-child(3) { width: 26%; }
+.sectable th:nth-child(4), .sectable td:nth-child(4),
+.sectable th:nth-child(5), .sectable td:nth-child(5) { width: 18%; }
+
+.secbar { padding-left: 4px !important; padding-right: 18px !important; }
+.secbar span {
+  display: block;
+  height: 8px;
+  background: var(--brown);
+  opacity: 0.34;
+  border-radius: 1px;
+}
+
+@media (max-width: 900px) {
+  .sectable td.secbar { display: none; }
+}
