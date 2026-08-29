@@ -43,51 +43,37 @@
 
 <main>
 
-  <section class="page-head">
-    <div class="shell">
-      <span class="eyebrow">Market</span>
-      <h1 class="h1 balance">What the market is doing, and what it means for your goal.</h1>
-      <p class="lead">
-        Markets move every day. Most of that movement does not change what you should do.
-        Everything on this page is live &mdash; nothing here is a number we typed in by hand.
-      </p>
-    </div>
-  </section>
-
   <!-- ======================================================== index board -->
-  <section class="section">
+  <section class="section section--first">
     <div class="shell">
       <div class="sec-head reveal">
         <span class="eyebrow">Where the indices stand</span>
         <h2 class="h2 balance">Today, and the long run.</h2>
-        <p>Click any row to open its full history, including one, three, five and ten year returns.</p>
+        <p>Live from the exchanges. Three and five year figures are compounded annual returns
+           &mdash; everything shorter is the plain change over that period.</p>
       </div>
-        <div class="tvbox" style="height:560px">
-          <div class="tradingview-widget-container" style="height:100%">
-            <div class="tradingview-widget-container__widget" style="height:100%"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-            {
-              "width": "100%", "height": "100%", "colorTheme": "light", "isTransparent": true,
-              "locale": "in",
-              "symbolsGroups": [
-                { "name": "India", "symbols": [
-                  { "name": "NSE:NIFTY", "displayName": "Nifty 50" },
-                  { "name": "BSE:SENSEX", "displayName": "Sensex" },
-                  { "name": "NSE:CNX100", "displayName": "Nifty 100 — large cap" },
-                  { "name": "NSE:NIFTY_MIDCAP_100", "displayName": "Nifty Midcap" },
-                  { "name": "NSE:NIFTYSMLCAP250", "displayName": "Nifty Smallcap 250" },
-                  { "name": "NSE:CNX500", "displayName": "Nifty 500" }
-                ]},
-                { "name": "Gold and global", "symbols": [
-                  { "name": "TVC:GOLD", "displayName": "Gold (spot, USD)" },
-                  { "name": "MCX:GOLD1!", "displayName": "Gold (MCX)" },
-                  { "name": "NASDAQ:IXIC", "displayName": "Nasdaq Composite" }
-                ]}
-              ]
-            }
-            </script>
-          </div>
-        </div>
+
+      <div class="retwrap reveal">
+        <table class="rettable" id="rettable">
+          <thead>
+            <tr>
+              <th scope="col">Index</th>
+              <th scope="col">Level</th>
+              <th scope="col">Today</th>
+              <th scope="col">1M</th>
+              <th scope="col">3M</th>
+              <th scope="col">6M</th>
+              <th scope="col">1Y</th>
+              <th scope="col">3Y<span class="retcagr">CAGR</span></th>
+              <th scope="col">5Y<span class="retcagr">CAGR</span></th>
+            </tr>
+          </thead>
+          <tbody id="retbody">
+            <tr><td colspan="9" class="retnote">Loading live figures&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tvcredit" id="retstamp"></p>
     </div>
   </section>
 
@@ -128,63 +114,46 @@
         <span class="eyebrow">Money and prices</span>
         <h2 class="h2 balance">What money costs, and what it buys.</h2>
         <p>The repo rate is the price of money. Inflation is what it loses while you hold it.
-           A plan only works if the return clears the second one.</p>
+           Between them they set the bar every investment has to clear.</p>
       </div>
 
-      <div class="grid grid--split" style="align-items:start; gap:34px">
-        <div>
-        <div class="tvbox" style="height:330px">
-          <div class="tradingview-widget-container" style="height:100%">
-            <div class="tradingview-widget-container__widget" style="height:100%"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
-            {
-              "width": "100%", "height": "100%", "colorTheme": "light", "isTransparent": true,
-              "locale": "in", "showSymbolLogo": false,
-              "symbolsGroups": [
-                { "name": "Policy rates", "symbols": [
-                  { "name": "ECONOMICS:ININTR", "displayName": "India — RBI repo rate" },
-                  { "name": "ECONOMICS:USINTR", "displayName": "United States — Fed funds" }
-                ]},
-                { "name": "Inflation, year on year", "symbols": [
-                  { "name": "ECONOMICS:INIRYY", "displayName": "India — CPI inflation" },
-                  { "name": "ECONOMICS:USIRYY", "displayName": "United States — CPI inflation" }
-                ]}
-              ]
-            }
-            </script>
-          </div>
-        </div>
-        </div>
-        <div>
-        <div class="tvbox" style="height:330px">
-          <div class="tradingview-widget-container" style="height:100%">
-            <div class="tradingview-widget-container__widget" style="height:100%"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-            {
-              "width": "100%", "height": "100%", "symbol": "ECONOMICS:INIRYY",
-              "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
-              "locale": "in", "hide_side_toolbar": true, "allow_symbol_change": true,
-              "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
-              "compareSymbols": [ { "symbol": "ECONOMICS:ININTR", "position": "SameScale" } ],
-              "range": "ALL", "calendar": false, "support_host": "https://www.tradingview.com"
-            }
-            </script>
-          </div>
-        </div>
+      <div class="ratecards reveal">
+        <div class="ratecard"><span class="ratecard__k">India repo rate</span><b data-rate="ECONOMICS:ININTR">&mdash;</b></div>
+        <div class="ratecard"><span class="ratecard__k">US Fed funds rate</span><b data-rate="ECONOMICS:USINTR">&mdash;</b></div>
+        <div class="ratecard"><span class="ratecard__k">India inflation (CPI)</span><b data-rate="ECONOMICS:INIRYY">&mdash;</b></div>
+        <div class="ratecard"><span class="ratecard__k">US inflation (CPI)</span><b data-rate="ECONOMICS:USIRYY">&mdash;</b></div>
+      </div>
+
+      <div class="tvbox" style="height:460px">
+        <div class="tradingview-widget-container" style="height:100%">
+          <div class="tradingview-widget-container__widget" style="height:100%"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+          {
+            "width": "100%", "height": "100%", "symbol": "ECONOMICS:INIRYY",
+            "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
+            "locale": "in", "hide_side_toolbar": true, "allow_symbol_change": true,
+            "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
+            "compareSymbols": [
+              { "symbol": "ECONOMICS:ININTR", "position": "SameScale" }
+            ],
+            "range": "60M", "calendar": false, "support_host": "https://www.tradingview.com"
+          }
+          </script>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- =============================================================== news -->
+  <!-- ============================================================== news -->
   <section class="section section--alt">
     <div class="shell">
       <div class="sec-head reveal">
-        <span class="eyebrow">Why it moved</span>
-        <h2 class="h2 balance">The reasons behind the day.</h2>
-        <p>A price move without a reason is noise. This is the live wire on the indices above.</p>
+        <span class="eyebrow">In the news</span>
+        <h2 class="h2 balance">What moved, and what was only noise.</h2>
+        <p>A live feed. Most of it will not change a plan built for ten years &mdash; which is
+           itself worth seeing week after week.</p>
       </div>
-        <div class="tvbox" style="height:520px">
+        <div class="tvbox" style="height:560px">
           <div class="tradingview-widget-container" style="height:100%">
             <div class="tradingview-widget-container__widget" style="height:100%"></div>
             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
@@ -196,35 +165,73 @@
             </script>
           </div>
         </div>
-    </div>
-  </section>
-
-  <!-- ============================================================ closing -->
-  <section class="section">
-    <div class="shell grid grid--split">
-      <div class="reveal">
-        <span class="eyebrow">How we read it</span>
-        <h2 class="h2 balance">Slow, but in the right direction.</h2>
-      </div>
-      <div class="reveal">
-        <p class="lead">An elephant does not move for every sound in the forest. It moves when
-          there is a reason.</p>
-        <p>We read the market the same way. The question is never what the index did today &mdash;
-          it is whether anything has changed for the goal you wrote down, and whether the money is
-          still parked where that goal needs it.</p>
-        <p class="hero__actions" style="margin-top:26px">
-          <a class="btn btn--accent" href="contact.html">Connect with us</a>
-          <a class="btn btn--brown" href="scan.html">Scan my portfolio</a>
-        </p>
-        <p class="tvcredit">Live market data and charts by
-          <a href="https://www.tradingview.com/" rel="noopener" target="_blank">TradingView</a>.</p>
-      </div>
+        <p class="tvcredit">Charts and news by <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a>.</p>
     </div>
   </section>
 
 </main>
 
+<footer class="site-footer">
+  <div class="shell footer">
+    <div class="footer__top">
+      <div>
+        <a class="logo" href="index.html">
+          <svg class="logo__mark" viewBox="58 68 187 187" aria-hidden="true" fill="none" stroke="#E0402B" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+        <path d="M111 116V187A20 20 0 0 1 91 207H67V77h38A32.5 32.5 0 0 1 137.5 109.5V246"/>
+        <path d="M192 116V187A20 20 0 0 0 212 207h24V77h-38A32.5 32.5 0 0 0 165.5 109.5V246"/>
+      </svg>
+          <span class="logo__text">
+            <span class="logo__name">Minimal Wealth</span>
+            <span class="logo__sub">Advisory</span>
+          </span>
+        </a>
+        <p class="footer__tag">Understand the position. Define the goal. Own only what the goal needs.</p>
+        <p class="footer__quote">&ldquo;I started investing at the age of 11. I was late!&rdquo; &mdash; <cite>Warren Buffett</cite></p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="calculator.html">Calculator</a></li>
+          <li><a href="solutions.html">Solutions</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="scan.html">Scan Portfolio</a></li>
+          <li><a href="market.html">Market</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Solutions</h4>
+        <ul>
+          <li><a href="solutions.html#fixed-income">Fixed Income</a></li>
+          <li><a href="solutions.html#equity">Equity</a></li>
+          <li><a href="solutions.html#private-equity">Private Equity</a></li>
+          <li><a href="solutions.html#us-nri">US NRI Corner</a></li>
+          <li><a href="solutions.html#commodity">Commodity</a></li>
+          <li><a href="solutions.html#insurance">Insurance</a></li>
+          <li><a href="solutions.html#tax">Tax Consulting</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Reach us</h4>
+        <ul>
+          <li><a href="mailto:rajkumar71234@gmail.com">rajkumar71234@gmail.com</a></li>
+          <li><a href="tel:+919842171234">+91 98421 71234</a></li>
+          <li>Chennai, Tamil Nadu</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>&copy; <span data-year>2026</span> Minimal Wealth Advisory. All rights reserved.</span>
+      <span>CIN: [to be added] &middot; AMFI ARN: [to be added] &middot; SEBI Reg: [to be added]</span>
+    </div>
+
+  </div>
+</footer>
 
 <script src="assets/js/main.js"></script>
+<script src="assets/js/market.js"></script>
 </body>
 </html>
