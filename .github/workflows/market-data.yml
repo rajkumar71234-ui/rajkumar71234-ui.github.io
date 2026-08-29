@@ -1,0 +1,41 @@
+name: Refresh index history
+
+# Official NSE closes, fetched from a server where there is no cross-origin
+# restriction, and committed as a small JSON file the site reads directly.
+
+on:
+  schedule:
+    - cron: "45 12 * * 1-5"     # 18:15 IST, after the Indian market closes
+  workflow_dispatch:            # and whenever you press Run workflow
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch index history
+        run: python tools/fetch_indices.py
+
+      - name: Commit if anything changed
+        run: |
+          if [ -n "$(git status --porcelain assets/data)" ]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add assets/data
+            git commit -m "Refresh index history"
+            git push
+          else
+            echo "No change."
+          fi
