@@ -106,6 +106,7 @@
     .then(function (j) {
       var map = {};
       (j.data || []).forEach(function (row) { map[row.s] = row.d; });
+      if (map["NSE:CNX500"]) window.__n500level = map["NSE:CNX500"][0];
       draw(map);
       if (stamp) {
         stamp.innerHTML = "Live from the exchanges via " +
@@ -278,6 +279,149 @@
       var d = document.getElementById("cx-usgdp-year");
       if (d && p.length) d.textContent = p[p.length - 1].t;
     }).catch(function () {});
+  }
+
+
+  /* ==================================================================
+     India's economy against what India's listed companies actually earn.
+     Profits are summed live from the 500 Nifty 500 constituents, by the
+     fiscal year each company reported. GDP is the World Bank's series.
+     Both are rebased to 100 so the two paths can be compared.
+     ================================================================== */
+
+  function svgDual(a, b, labelA, labelB) {
+    if (!a.length || a.length !== b.length) return "";
+    var W = 620, H = 250, PL = 38, PR = 10, PT = 14, PB = 26;
+    var all = a.concat(b).map(function (p) { return p.v; });
+    var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
+    var pad = (hi - lo) * 0.1; lo -= pad; hi += pad;
+    var x = function (i) { return PL + (W - PL - PR) * (i / (a.length - 1)); };
+    var y = function (v) { return PT + (H - PT - PB) * (1 - (v - lo) / (hi - lo)); };
+    var path = function (s) {
+      return s.map(function (p, i) { return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(p.v).toFixed(1); }).join(" ");
+    };
+    var grid = "";
+    [hi - pad, (hi + lo) / 2, lo + pad].forEach(function (v) {
+      grid += '<line x1="' + PL + '" y1="' + y(v).toFixed(1) + '" x2="' + (W - PR) + '" y2="' + y(v).toFixed(1) +
+              '" stroke="#E4DFD6" stroke-width="1"/>' +
+              '<text x="' + (PL - 6) + '" y="' + (y(v) + 3.5).toFixed(1) + '" text-anchor="end" class="cx-ax">' +
+              Math.round(v) + "</text>";
+    });
+    var ticks = "";
+    a.forEach(function (p, i) {
+      if (i === 0 || i === a.length - 1 || i === Math.floor(a.length / 2)) {
+        ticks += '<text x="' + x(i).toFixed(1) + '" y="' + (H - 10) + '" text-anchor="' +
+                 (i === 0 ? "start" : i === a.length - 1 ? "end" : "middle") + '" class="cx-ax">' + p.t + "</text>";
+      }
+    });
+    return '<svg class="cx" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" role="img" aria-label="' +
+      labelA + " against " + labelB + '">' + grid + ticks +
+      '<path d="' + path(b) + '" fill="none" stroke="' + BROWN + '" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>' +
+      '<path d="' + path(a) + '" fill="none" stroke="' + ACCENT + '" stroke-width="1.8" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>' +
+      '<circle cx="' + x(a.length - 1).toFixed(1) + '" cy="' + y(a[a.length - 1].v).toFixed(1) + '" r="3" fill="' + ACCENT + '"/>' +
+      '<circle cx="' + x(b.length - 1).toFixed(1) + '" cy="' + y(b[b.length - 1].v).toFixed(1) + '" r="3" fill="' + BROWN + '"/>' +
+      "</svg>";
+  }
+
+  function rebase(series) {
+    var base = series[0].v;
+    return series.map(function (p) { return { t: p.t, v: (p.v / base) * 100 }; });
+  }
+
+  function buildEarnings() {
+    var host = document.getElementById("cx-gdpeps");
+    if (!host) return;
+
+    var profits = fetch(ENDPOINT.replace("/global/", "/india/"), {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        symbols: { query: { types: ["stock"] }, symbolset: ["SYML:NSE;CNX500"] },
+        columns: ["fiscal_period_fy_h", "net_income_fy_h", "market_cap_basic", "net_income_ttm"],
+        range: [0, 500]
+      })
+    }).then(function (r) { return r.json(); });
+
+    var gdp = fetch("https://api.worldbank.org/v2/country/IND/indicator/NY.GDP.MKTP.CN" +
+                    "?format=json&per_page=30&mrv=30")
+      .then(function (r) { return r.json(); });
+
+    Promise.all([profits, gdp]).then(function (res) {
+      var j = res[0], w = res[1];
+      var by = {}, mcap = 0, nittm = 0;
+      (j.data || []).forEach(function (row) {
+        var ys = row.d[0] || [], vs = row.d[1] || [];
+        for (var i = 0; i < ys.length; i++) {
+          if (typeof ys[i] === "number" && typeof vs[i] === "number") {
+            by[ys[i]] = by[ys[i]] || { s: 0, n: 0 };
+            by[ys[i]].s += vs[i];
+            by[ys[i]].n += 1;
+          }
+        }
+        if (typeof row.d[2] === "number") mcap += row.d[2];
+        if (typeof row.d[3] === "number") nittm += row.d[3];
+      });
+
+      /* live valuation of the whole index, from its own constituents */
+      var pe = nittm > 0 ? mcap / nittm : null;
+      var peEl = document.getElementById("cx-n500pe");
+      if (peEl && pe) peEl.textContent = pe.toFixed(1) + "×";
+      var epsEl = document.getElementById("cx-n500eps");
+      var lvl = document.getElementById("cx-n500lvl");
+      if (epsEl && pe && window.__n500level) {
+        epsEl.textContent = "₹" + Math.round(window.__n500level / pe).toLocaleString("en-IN");
+      }
+      if (lvl && window.__n500level) {
+        lvl.textContent = window.__n500level.toLocaleString("en-IN", { maximumFractionDigits: 0 });
+      }
+      var prEl = document.getElementById("cx-n500profit");
+      var gdEl = document.getElementById("cx-gdpshare");
+
+      /* only years where nearly every company has reported */
+      var years = Object.keys(by).map(Number).sort(function (p, q) { return p - q; })
+        .filter(function (y) { return by[y].n >= 400; });
+      if (years.length < 4) { host.innerHTML = '<span class="cx-none">Not enough reported years yet.</span>'; return; }
+
+      var gdpBy = {};
+      if (Array.isArray(w) && w[1]) {
+        w[1].forEach(function (d) { if (d.value != null) gdpBy[+d.date] = +d.value; });
+      }
+
+      /* a company's FY2025 ended in March 2025, which the World Bank files
+         under 2024 for India — so the profit year lines up with year - 1 */
+      var pts = [], gts = [];
+      years.forEach(function (y) {
+        var g = gdpBy[y - 1];
+        if (g == null) return;
+        var lab = "FY" + String(y).slice(2);
+        pts.push({ t: lab, v: by[y].s });
+        gts.push({ t: lab, v: g });
+      });
+      if (pts.length < 4) { host.innerHTML = '<span class="cx-none">History not available.</span>'; return; }
+
+      if (prEl) prEl.textContent = "₹" + (pts[pts.length - 1].v / 1e7 / 1e5).toFixed(2) + " lakh cr";
+      if (gdEl) {
+        gdEl.textContent = ((pts[pts.length - 1].v / gts[gts.length - 1].v) * 100).toFixed(2) + "%";
+      }
+      var fromEl = document.getElementById("cx-gdpeps-from");
+      if (fromEl) fromEl.textContent = pts[0].t + " to " + pts[pts.length - 1].t;
+
+      host.innerHTML = svgDual(rebase(pts), rebase(gts),
+                               "Nifty 500 profits", "India nominal GDP");
+    }).catch(function () {
+      host.innerHTML = '<span class="cx-none">The feed did not answer. Refresh in a moment.</span>';
+    });
+  }
+
+  if (document.getElementById("cx-gdpeps")) {
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (es, obs) {
+        if (es[0].isIntersecting) { obs.disconnect(); buildEarnings(); }
+      }, { rootMargin: "400px" });
+      io.observe(document.getElementById("cx-gdpeps"));
+    } else {
+      buildEarnings();
+    }
   }
 
 })();
