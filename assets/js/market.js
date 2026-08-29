@@ -413,15 +413,11 @@
     });
   }
 
+  /* the constituent pull is the heaviest request on the page, so it goes
+     last — after everything above has already painted */
   if (document.getElementById("cx-gdpeps")) {
-    if ("IntersectionObserver" in window) {
-      var io = new IntersectionObserver(function (es, obs) {
-        if (es[0].isIntersecting) { obs.disconnect(); buildEarnings(); }
-      }, { rootMargin: "400px" });
-      io.observe(document.getElementById("cx-gdpeps"));
-    } else {
-      buildEarnings();
-    }
+    if (document.readyState === "complete") setTimeout(buildEarnings, 300);
+    else window.addEventListener("load", function () { setTimeout(buildEarnings, 300); });
   }
 
 })();
