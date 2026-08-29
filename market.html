@@ -117,11 +117,40 @@
            Between them they set the bar every investment has to clear.</p>
       </div>
 
-      <div class="ratecards reveal">
-        <div class="ratecard"><span class="ratecard__k">India repo rate</span><b data-rate="ECONOMICS:ININTR">&mdash;</b></div>
-        <div class="ratecard"><span class="ratecard__k">US Fed funds rate</span><b data-rate="ECONOMICS:USINTR">&mdash;</b></div>
-        <div class="ratecard"><span class="ratecard__k">India inflation (CPI)</span><b data-rate="ECONOMICS:INIRYY">&mdash;</b></div>
-        <div class="ratecard"><span class="ratecard__k">US inflation (CPI)</span><b data-rate="ECONOMICS:USIRYY">&mdash;</b></div>
+      <div class="macros reveal">
+
+        <div class="macro">
+          <span class="macro__k">India repo rate</span>
+          <b class="macro__v" data-rate="ECONOMICS:ININTR">&mdash;</b>
+          <div class="macro__chart" id="cx-inrepo"></div>
+          <span class="macro__src">Reserve Bank of India, via the BIS policy-rate series
+            to <span id="cx-inrepo-last">&mdash;</span>.</span>
+        </div>
+
+        <div class="macro">
+          <span class="macro__k">US Fed funds rate</span>
+          <b class="macro__v" data-rate="ECONOMICS:USINTR">&mdash;</b>
+          <div class="macro__chart" id="cx-usrate"></div>
+          <span class="macro__src">Federal Reserve, via the BIS policy-rate series
+            to <span id="cx-usrate-last">&mdash;</span>.</span>
+        </div>
+
+        <div class="macro">
+          <span class="macro__k">India inflation (CPI)</span>
+          <b class="macro__v" data-rate="ECONOMICS:INIRYY">&mdash;</b>
+          <div class="macro__chart" id="cx-incpi"></div>
+          <span class="macro__src">Yearly average, World Bank, to
+            <span id="cx-incpi-last">&mdash;</span>.</span>
+        </div>
+
+        <div class="macro">
+          <span class="macro__k">US inflation (CPI)</span>
+          <b class="macro__v" data-rate="ECONOMICS:USIRYY">&mdash;</b>
+          <div class="macro__chart" id="cx-uscpi"></div>
+          <span class="macro__src">Yearly average, World Bank, to
+            <span id="cx-uscpi-last">&mdash;</span>.</span>
+        </div>
+
       </div>
 
       <div class="sec-head sec-head--sub reveal">
@@ -145,6 +174,83 @@
       </div>
       <p class="tvcredit">Charts and calendar by
         <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ growth -->
+  <section class="section section--alt">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Growth</span>
+        <h2 class="h2 balance">What the two economies actually did.</h2>
+        <p>Real GDP growth, year by year, stripped of inflation. This is the ground under
+           every long-dated plan &mdash; the market can run ahead of it or behind it for
+           years, but not forever.</p>
+      </div>
+
+      <div class="gdps reveal">
+        <div class="gdp">
+          <div class="gdp__head">
+            <span class="gdp__k">India &mdash; real GDP growth</span>
+            <b class="gdp__v" id="cx-ingdp-now">&mdash;</b>
+            <span class="gdp__yr">in <span id="cx-ingdp-year">&mdash;</span></span>
+          </div>
+          <div class="macro__chart macro__chart--tall" id="cx-ingdp"></div>
+        </div>
+        <div class="gdp">
+          <div class="gdp__head">
+            <span class="gdp__k">United States &mdash; real GDP growth</span>
+            <b class="gdp__v" id="cx-usgdp-now">&mdash;</b>
+            <span class="gdp__yr">in <span id="cx-usgdp-year">&mdash;</span></span>
+          </div>
+          <div class="macro__chart macro__chart--tall" id="cx-usgdp"></div>
+        </div>
+      </div>
+
+      <p class="tvcredit">Growth and inflation from the
+        <a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Bank</a>,
+        policy rates from the
+        <a href="https://www.bis.org/statistics/cbpol.htm" target="_blank" rel="noopener">BIS</a>.
+        Read live, every time this page loads.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================== blog -->
+  <section class="section" id="journal">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Journal</span>
+        <h2 class="h2 balance">What we are reading into all this.</h2>
+        <p>Notes written when something is worth writing about, not on a schedule.</p>
+      </div>
+
+      <div class="posts reveal">
+
+        <article class="post">
+          <span class="post__date">[Date]</span>
+          <h3 class="post__title"><a href="#">[Title of your first post]</a></h3>
+          <p class="post__lead">[Two or three lines that say what the post argues, so a reader
+            can decide from here whether to open it.]</p>
+          <a class="post__more" href="#">Read it</a>
+        </article>
+
+        <article class="post">
+          <span class="post__date">[Date]</span>
+          <h3 class="post__title"><a href="#">[Title of your second post]</a></h3>
+          <p class="post__lead">[Two or three lines that say what the post argues, so a reader
+            can decide from here whether to open it.]</p>
+          <a class="post__more" href="#">Read it</a>
+        </article>
+
+        <article class="post">
+          <span class="post__date">[Date]</span>
+          <h3 class="post__title"><a href="#">[Title of your third post]</a></h3>
+          <p class="post__lead">[Two or three lines that say what the post argues, so a reader
+            can decide from here whether to open it.]</p>
+          <a class="post__more" href="#">Read it</a>
+        </article>
+
+      </div>
     </div>
   </section>
 
