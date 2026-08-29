@@ -2334,13 +2334,26 @@ ul { margin: 0; padding: 0; list-style: none; }
 .retwrap {
   border: 1px solid var(--line);
   background: var(--bg);
-  overflow-x: auto;
+  overflow: auto;
+  max-height: 560px;
   margin-top: 30px;
   -webkit-overflow-scrolling: touch;
 }
-.rettable { width: 100%; border-collapse: collapse; font-size: 0.92rem; min-width: 860px; }
+.rettable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.92rem;
+  min-width: 900px;
+}
 .rettable th, .rettable td { padding: 14px 16px; text-align: right; white-space: nowrap; }
+
+/* the header row stays put while the numbers scroll under it */
 .rettable thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  background: var(--bg);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.12em;
@@ -2349,7 +2362,18 @@ ul { margin: 0; padding: 0; list-style: none; }
   border-bottom: 1px solid var(--line);
   vertical-align: bottom;
 }
-.rettable thead th:first-child { text-align: left; }
+
+/* and the name column stays put while the periods scroll sideways */
+.rettable thead th:first-child { text-align: left; left: 0; z-index: 4; }
+.rettable tbody th[scope="row"] {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--bg);
+}
+.retglabel { position: sticky; left: 16px; display: inline-block; }
+.rettable tbody th[scope="row"] { border-right: 1px solid var(--line); }
+.rettable thead th:first-child { border-right: 1px solid var(--line); }
 .retcagr {
   display: block;
   font-size: 0.6rem;
@@ -2359,6 +2383,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   margin-top: 2px;
 }
 .rettable tbody tr + tr th, .rettable tbody tr + tr td { border-top: 1px solid var(--line); }
+.rettable tbody tr:hover th[scope="row"], .rettable tbody tr:hover td { background: var(--bg-alt); }
 .rettable tbody th[scope="row"] { text-align: left; font-weight: 600; color: var(--ink); }
 .retname { display: block; }
 .retnote2 {
@@ -2415,3 +2440,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 @media (max-width: 860px) { .ratecards { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .ratecards { grid-template-columns: 1fr; } }
+
+/* sub-heading inside a section that already has a heading */
+.sec-head--sub { margin-top: 44px; }
+.sec-head--sub .h3 { margin: 0 0 8px; }
+.sec-head--sub p { margin: 0; color: var(--muted); max-width: 62ch; }
