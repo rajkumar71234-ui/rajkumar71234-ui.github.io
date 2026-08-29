@@ -337,7 +337,8 @@
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
         symbols: { query: { types: ["stock"] }, symbolset: ["SYML:NSE;CNX500"] },
-        columns: ["fiscal_period_fy_h", "net_income_fy_h", "market_cap_basic", "net_income_ttm"],
+        columns: ["fiscal_period_fy_h", "net_income_fy_h", "market_cap_basic", "net_income_ttm",
+                   "sector", "Perf.3M", "total_revenue_fq_h"],
         range: [0, 500]
       })
     }).then(function (r) { return r.json(); });
@@ -376,6 +377,8 @@
       }
       var prEl = document.getElementById("cx-n500profit");
       var gdEl = document.getElementById("cx-gdpshare");
+
+      sectorTable(j.data || []);
 
       /* only years where nearly every company has reported */
       var years = Object.keys(by).map(Number).sort(function (p, q) { return p - q; })
@@ -419,5 +422,103 @@
     if (document.readyState === "complete") setTimeout(buildEarnings, 300);
     else window.addEventListener("load", function () { setTimeout(buildEarnings, 300); });
   }
+
+
+  /* ------------------------------------------------- sectors of the 500 -- */
+
+  function sectorTable(rows) {
+    var body = document.getElementById("secbody");
+    if (!body) return;
+
+    var S = {}, total = 0;
+    rows.forEach(function (row) {
+      var d = row.d;
+      var name = d[4] || "Other", mc = d[2];
+      if (typeof mc !== "number") return;
+      var s = S[name] = S[name] || { mc: 0, pw: 0, pn: 0, r0: 0, r1: 0, n: 0, rn: 0 };
+      s.mc += mc; total += mc; s.n += 1;
+      if (typeof d[5] === "number") { s.pw += d[5] * mc; s.pn += mc; }
+      var rev = d[6] || [];
+      if (typeof rev[0] === "number" && typeof rev[1] === "number") {
+        s.r0 += rev[0]; s.r1 += rev[1]; s.rn += 1;
+      }
+    });
+
+    var list = Object.keys(S).map(function (k) {
+      var v = S[k];
+      return {
+        name: k, n: v.n,
+        w: (v.mc / total) * 100,
+        p3: v.pn ? v.pw / v.pn : null,
+        q: v.r1 ? ((v.r0 - v.r1) / v.r1) * 100 : null
+      };
+    }).sort(function (a, b) { return b.w - a.w; });
+
+    var html = list.map(function (r) {
+      return "<tr>" +
+        '<th scope="row"><span class="retname">' + r.name + "</span>" +
+        '<span class="retnote2">' + r.n + " companies</span></th>" +
+        '<td class="retlevel" data-h="Weight">' + r.w.toFixed(2) + "%</td>" +
+        '<td class="secbar" data-h="Weight"><span style="width:' +
+          Math.max(1, (r.w / list[0].w) * 100).toFixed(1) + '%"></span></td>' +
+        cell(r.p3, "3M return") +
+        cell(r.q, "QoQ sales") +
+        "</tr>";
+    }).join("");
+    body.innerHTML = html;
+
+    var st = document.getElementById("secstamp");
+    if (st) st.textContent = list.length + " sectors, " +
+      rows.length + " companies, weighted by market value.";
+  }
+
+
+  /* ------------------------------------------ quarterly GDP, India vs US -- */
+
+  function oecdQuarterly(country, mode, n) {
+    var code = "Q.Y." + country + ".S1.S1.B1GQ._Z._Z._Z.PC.L." + mode + ".T0102";
+    var u = "https://api.db.nomics.world/v22/series/OECD/" +
+            "DSD_NAMAIN1@DF_QNA_EXPENDITURE_GROWTH_G20/" + code + "?observations=1";
+    return fetch(u).then(function (r) { return r.json(); }).then(function (j) {
+      var d = j.series && j.series.docs && j.series.docs[0];
+      if (!d) return [];
+      var out = [];
+      for (var i = 0; i < d.period.length; i++) {
+        if (typeof d.value[i] === "number") {
+          out.push({ t: d.period[i].replace("-Q", " Q"), v: d.value[i] });
+        }
+      }
+      return out.slice(-n);
+    });
+  }
+
+  function buildQuarterly() {
+    var host = document.getElementById("cx-qgdp");
+    if (!host) return;
+    Promise.all([
+      oecdQuarterly("IND", "G1", 24),
+      oecdQuarterly("USA", "G1", 24),
+      oecdQuarterly("IND", "GY", 1),
+      oecdQuarterly("USA", "GY", 1)
+    ]).then(function (r) {
+      var a = r[0], b = r[1];
+      var n = Math.min(a.length, b.length);
+      if (n < 4) { host.innerHTML = '<span class="cx-none">History not available.</span>'; return; }
+      a = a.slice(-n); b = b.slice(-n);
+      host.innerHTML = svgDual(a, b, "India quarterly growth", "US quarterly growth");
+
+      var set = function (id, txt) { var e = document.getElementById(id); if (e) e.textContent = txt; };
+      set("cx-qgdp-in", a[n - 1].v.toFixed(2) + "%");
+      set("cx-qgdp-us", b[n - 1].v.toFixed(2) + "%");
+      set("cx-qgdp-q", a[n - 1].t);
+      if (r[2].length) set("cx-qgdp-inyy", r[2][0].v.toFixed(2) + "%");
+      if (r[3].length) set("cx-qgdp-usyy", r[3][0].v.toFixed(2) + "%");
+      set("cx-qgdp-from", a[0].t);
+    }).catch(function () {
+      host.innerHTML = '<span class="cx-none">The feed did not answer. Refresh in a moment.</span>';
+    });
+  }
+
+  if (document.getElementById("cx-qgdp")) buildQuarterly();
 
 })();
