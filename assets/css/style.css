@@ -2549,3 +2549,30 @@ ul { margin: 0; padding: 0; list-style: none; }
     text-transform: uppercase; color: var(--muted);
   }
 }
+
+/* --------------------------------------------- market: GDP vs earnings */
+
+.gdp--wide { margin-top: 26px; }
+.gdp__head--legend { gap: 22px; margin-bottom: 6px; }
+.lg { font-size: 0.8rem; font-weight: 600; color: var(--muted); display: inline-flex; align-items: center; gap: 7px; }
+.lg::before { content: ""; width: 16px; height: 2px; background: currentColor; }
+.lg--a { color: var(--accent); }
+.lg--b { color: var(--brown); }
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 18px;
+}
+.fact { background: var(--bg); padding: 16px 14px; }
+.fact__k {
+  display: block; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 8px; line-height: 1.4;
+}
+.fact b { font-size: 1.16rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 900px) { .facts { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .facts { grid-template-columns: 1fr; } }
