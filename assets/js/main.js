@@ -52,6 +52,38 @@
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
     items.forEach(function (el) { io.observe(el); });
+
+    /* Safety net. On some browsers the observer never fires for a block that
+       is already on screen, or for the last block on a long page, and the
+       section then stays invisible for good. So we also check by hand on
+       scroll, and once more a moment after load. */
+    var sweep = function () {
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      var left = 0;
+      items.forEach(function (el) {
+        if (el.classList.contains("is-in")) return;
+        var r = el.getBoundingClientRect();
+        if (r.top < h * 1.15 && r.bottom > -80) {
+          el.classList.add("is-in");
+          io.unobserve(el);
+        } else { left++; }
+      });
+      return left;
+    };
+    var tick = false;
+    var onScroll = function () {
+      if (tick) return;
+      tick = true;
+      window.requestAnimationFrame(function () { tick = false; sweep(); });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    window.addEventListener("load", function () { setTimeout(sweep, 60); });
+    setTimeout(sweep, 400);
+    /* last resort: nothing on this page should ever stay invisible */
+    setTimeout(function () {
+      items.forEach(function (el) { el.classList.add("is-in"); });
+    }, 4000);
   }
 
   /* ------------------------------------------------------------ year -- */
