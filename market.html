@@ -208,6 +208,30 @@
       </div>
 
 
+
+      <div class="sec-head sec-head--sub reveal">
+        <h3 class="h3">Quarter by quarter, not year by year.</h3>
+        <p>Growth against the quarter immediately before it, seasonally adjusted, from
+           <span id="cx-qgdp-from">&mdash;</span> to the latest print. This is the reading that
+           turns first when something changes.</p>
+      </div>
+
+      <div class="gdp gdp--wide reveal">
+        <div class="gdp__head gdp__head--legend">
+          <span class="lg lg--a">India</span>
+          <span class="lg lg--b">United States</span>
+        </div>
+        <div class="macro__chart macro__chart--tall" id="cx-qgdp"></div>
+        <div class="facts facts--4">
+          <div class="fact"><span class="fact__k">India, latest quarter</span><b id="cx-qgdp-in">&mdash;</b></div>
+          <div class="fact"><span class="fact__k">India, same quarter a year earlier</span><b id="cx-qgdp-inyy">&mdash;</b></div>
+          <div class="fact"><span class="fact__k">US, latest quarter</span><b id="cx-qgdp-us">&mdash;</b></div>
+          <div class="fact"><span class="fact__k">US, same quarter a year earlier</span><b id="cx-qgdp-usyy">&mdash;</b></div>
+        </div>
+        <span class="macro__src">Latest quarter shown is <span id="cx-qgdp-q">&mdash;</span>.
+          Quarterly national accounts, OECD.</span>
+      </div>
+
       <div class="sec-head sec-head--sub reveal">
         <h3 class="h3">India&rsquo;s economy against what India&rsquo;s companies earn.</h3>
         <p>Both lines start at 100 in <span id="cx-gdpeps-from">&mdash;</span>, so the question is
@@ -242,6 +266,38 @@
         Read live, every time this page loads.</p>
     </div>
   </section>
+
+  <!-- =========================================================== sectors -->
+  <section class="section" id="sectors">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Inside the index</span>
+        <h2 class="h2 balance">Where the money sits, and what it did.</h2>
+        <p>Every company in the Nifty&nbsp;500, grouped by sector. Weight is that sector&rsquo;s
+           share of the index by market value. The return is the last three months, weighted the
+           same way. Sales growth compares the latest reported quarter with the one before it.</p>
+      </div>
+
+      <div class="retwrap reveal">
+        <table class="rettable sectable">
+          <thead>
+            <tr>
+              <th scope="col">Sector</th>
+              <th scope="col">Weight</th>
+              <th scope="col"></th>
+              <th scope="col">3M return</th>
+              <th scope="col">QoQ sales</th>
+            </tr>
+          </thead>
+          <tbody id="secbody">
+            <tr><td colspan="5" class="retnote">Reading the constituents&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tvcredit" id="secstamp"></p>
+    </div>
+  </section>
+
 
   <!-- ============================================================== blog -->
   <section class="section" id="journal">
