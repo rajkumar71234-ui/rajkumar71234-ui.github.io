@@ -1,7 +1,7 @@
 /* =========================================================================
    Minimal Wealth Advisory — live index returns.
    One request to TradingView's public scanner, no key, nothing stored.
-   Three and five year figures are converted to a compounded annual rate.
+   Three, five and ten year figures are compounded annual returns.
    ========================================================================= */
 (function () {
   "use strict";
@@ -9,20 +9,20 @@
   var ENDPOINT = "https://scanner.tradingview.com/global/scan";
 
   var ROWS = [
-    { group: "India" },
     { t: "NSE:NIFTY",        label: "Nifty 50",            note: "Large cap" },
     { t: "BSE:SENSEX",       label: "Sensex",              note: "30 companies" },
     { t: "NSE:NIFTYJR",      label: "Nifty Next 50",       note: "The next tier" },
-    { t: "NSE:MID150BEES",   label: "Nifty Midcap 150",    note: "Mid cap \u2014 via its index ETF" },
-    { t: "NSE:HDFCSML250",   label: "Nifty Smallcap 250",  note: "Small cap \u2014 via its index ETF" },
+    { t: "NSE:MID150BEES",   label: "Nifty Midcap 150",    note: "Mid cap — via its index ETF" },
+    { t: "NSE:HDFCSML250",   label: "Nifty Smallcap 250",  note: "Small cap — via its index ETF" },
     { t: "NSE:CNX500",       label: "Nifty 500",           note: "The broad market" },
-    { group: "Gold and global" },
     { t: "TVC:GOLD",         label: "Gold",                note: "Spot, USD/oz" },
     { t: "MCX:GOLD1!",       label: "Gold (MCX)",          note: "Rupees, 10g" },
     { t: "NASDAQ:IXIC",      label: "Nasdaq Composite",    note: "United States" }
   ];
 
-  var COLUMNS = ["close", "change", "Perf.1M", "Perf.3M", "Perf.6M", "Perf.Y", "Perf.3Y", "Perf.5Y"];
+  /* order matters — it is the order the columns are drawn in */
+  var COLUMNS = ["close", "change", "Perf.1M", "Perf.3M", "Perf.6M",
+                 "Perf.YTD", "Perf.Y", "Perf.3Y", "Perf.5Y", "Perf.10Y"];
 
   var body  = document.getElementById("retbody");
   var stamp = document.getElementById("retstamp");
@@ -48,25 +48,35 @@
     return '<td class="ret ' + cls + '">' + sign + pct.toFixed(2) + "%</td>";
   }
 
+  /* TradingView silently clamps a long window to however much history the
+     instrument actually has, so an identical pair means the longer one is
+     not real. Blank it rather than print a number that is not what it says. */
+  function longRuns(d) {
+    var y3 = d[7], y5 = d[8], y10 = d[9];
+    var same = function (a, b) {
+      return a != null && b != null && Math.abs(a - b) < 0.005;
+    };
+    if (same(y10, y5)) y10 = null;
+    if (same(y5, y3)) y5 = null;
+    return [cagr(y3, 3), cagr(y5, 5), cagr(y10, 10)];
+  }
+
   function draw(map) {
     var html = "";
     ROWS.forEach(function (r) {
-      if (r.group) {
-        html += '<tr class="retgroup"><th colspan="9" scope="colgroup">' +
-                '<span class="retglabel">' + r.group + "</span></th></tr>";
-        return;
-      }
       var d = map[r.t];
       html += "<tr>" +
         '<th scope="row"><span class="retname">' + r.label + "</span>" +
         '<span class="retnote2">' + r.note + "</span></th>";
       if (!d) {
-        html += '<td class="ret">&mdash;</td>' + cell(null) + cell(null) + cell(null) +
-                cell(null) + cell(null) + cell(null) + cell(null);
+        html += '<td class="retlevel">&mdash;</td>';
+        for (var i = 0; i < 9; i++) html += cell(null);
       } else {
+        var lr = longRuns(d);
         html += '<td class="retlevel">' + level(d[0]) + "</td>" +
-                cell(d[1]) + cell(d[2]) + cell(d[3]) + cell(d[4]) + cell(d[5]) +
-                cell(cagr(d[6], 3)) + cell(cagr(d[7], 5));
+                cell(d[1]) + cell(d[2]) + cell(d[3]) + cell(d[4]) +
+                cell(d[5]) + cell(d[6]) +
+                cell(lr[0]) + cell(lr[1]) + cell(lr[2]);
       }
       html += "</tr>";
     });
@@ -74,11 +84,11 @@
   }
 
   function fail() {
-    body.innerHTML = '<tr><td colspan="9" class="retnote">' +
+    body.innerHTML = '<tr><td colspan="11" class="retnote">' +
       "The live feed did not answer just now. Refresh in a moment." + "</td></tr>";
   }
 
-  var tickers = ROWS.filter(function (r) { return r.t; }).map(function (r) { return r.t; });
+  var tickers = ROWS.map(function (r) { return r.t; });
 
   fetch(ENDPOINT, {
     method: "POST",
@@ -99,7 +109,7 @@
           ", read at " + new Date().toLocaleString("en-IN", {
             day: "numeric", month: "short", year: "numeric",
             hour: "2-digit", minute: "2-digit"
-          }) + ".";
+          }) + ". A dash means the index has not existed that long.";
       }
     })
     .catch(fail);
@@ -127,7 +137,7 @@
       (j.data || []).forEach(function (row) { map[row.s] = row.d[0]; });
       Array.prototype.forEach.call(rateEls, function (el) {
         var v = map[el.getAttribute("data-rate")];
-        el.textContent = (v == null || !isFinite(v)) ? "\u2014" : v.toFixed(2) + "%";
+        el.textContent = (v == null || !isFinite(v)) ? "—" : v.toFixed(2) + "%";
       });
     })
     .catch(function () {});
