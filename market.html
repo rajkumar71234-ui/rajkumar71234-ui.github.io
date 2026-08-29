@@ -49,8 +49,9 @@
       <div class="sec-head reveal">
         <span class="eyebrow">Where the indices stand</span>
         <h2 class="h2 balance">Today, and the long run.</h2>
-        <p>Live from the exchanges. Three and five year figures are compounded annual returns
-           &mdash; everything shorter is the plain change over that period.</p>
+        <p>Live from the exchanges. CY is this calendar year so far. Three, five and ten
+           year figures are compounded annual returns &mdash; everything shorter is the plain
+           change over that period.</p>
       </div>
 
       <div class="retwrap reveal">
@@ -63,13 +64,15 @@
               <th scope="col">1M</th>
               <th scope="col">3M</th>
               <th scope="col">6M</th>
+              <th scope="col">CY<span class="retcagr">so far</span></th>
               <th scope="col">1Y</th>
               <th scope="col">3Y<span class="retcagr">CAGR</span></th>
               <th scope="col">5Y<span class="retcagr">CAGR</span></th>
+              <th scope="col">10Y<span class="retcagr">CAGR</span></th>
             </tr>
           </thead>
           <tbody id="retbody">
-            <tr><td colspan="9" class="retnote">Loading live figures&hellip;</td></tr>
+            <tr><td colspan="11" class="retnote">Loading live figures&hellip;</td></tr>
           </tbody>
         </table>
       </div>
@@ -123,46 +126,25 @@
 
       <div class="sec-head sec-head--sub reveal">
         <h3 class="h3">Every release, with the date it was declared.</h3>
-        <p>India and the United States. Each line carries the figure that was announced,
-           what was expected, and what it replaced.</p>
+        <p>India and the United States, the releases that actually move a market
+           &mdash; rate decisions, inflation, growth, jobs. Each line carries the figure that
+           was announced, what was expected, and what it replaced. Scroll back for earlier
+           months.</p>
       </div>
 
-      <div class="tvbox" style="height:520px">
+      <div class="tvbox" style="height:620px">
         <div class="tradingview-widget-container" style="height:100%">
           <div class="tradingview-widget-container__widget" style="height:100%"></div>
           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
           {
             "width": "100%", "height": "100%", "colorTheme": "light", "isTransparent": true,
-            "locale": "in", "importanceFilter": "0,1", "countryFilter": "in,us"
+            "locale": "in", "importanceFilter": "1", "countryFilter": "in,us"
           }
           </script>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ============================================================== news -->
-  <section class="section section--alt">
-    <div class="shell">
-      <div class="sec-head reveal">
-        <span class="eyebrow">In the news</span>
-        <h2 class="h2 balance">What moved, and what was only noise.</h2>
-        <p>A live feed. Most of it will not change a plan built for ten years &mdash; which is
-           itself worth seeing week after week.</p>
-      </div>
-        <div class="tvbox" style="height:560px">
-          <div class="tradingview-widget-container" style="height:100%">
-            <div class="tradingview-widget-container__widget" style="height:100%"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-            {
-              "feedMode": "market", "market": "index", "isTransparent": true,
-              "displayMode": "regular", "width": "100%", "height": "100%",
-              "colorTheme": "light", "locale": "in"
-            }
-            </script>
-          </div>
-        </div>
-        <p class="tvcredit">Charts and news by <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a>.</p>
+      <p class="tvcredit">Charts and calendar by
+        <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a>.</p>
     </div>
   </section>
 
