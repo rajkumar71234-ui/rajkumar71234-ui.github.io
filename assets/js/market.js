@@ -13,8 +13,8 @@
     { t: "NSE:NIFTY",        label: "Nifty 50",            note: "Large cap" },
     { t: "BSE:SENSEX",       label: "Sensex",              note: "30 companies" },
     { t: "NSE:NIFTYJR",      label: "Nifty Next 50",       note: "The next tier" },
-    { t: "NSE:CNXMIDCAP",    label: "Nifty Midcap 100",    note: "Mid cap" },
-    { t: "NSE:CNXSMALLCAP",  label: "Nifty Smallcap 100",  note: "Small cap" },
+    { t: "NSE:MID150BEES",   label: "Nifty Midcap 150",    note: "Mid cap \u2014 via its index ETF" },
+    { t: "NSE:HDFCSML250",   label: "Nifty Smallcap 250",  note: "Small cap \u2014 via its index ETF" },
     { t: "NSE:CNX500",       label: "Nifty 500",           note: "The broad market" },
     { group: "Gold and global" },
     { t: "TVC:GOLD",         label: "Gold",                note: "Spot, USD/oz" },
@@ -52,7 +52,8 @@
     var html = "";
     ROWS.forEach(function (r) {
       if (r.group) {
-        html += '<tr class="retgroup"><th colspan="9" scope="colgroup">' + r.group + "</th></tr>";
+        html += '<tr class="retgroup"><th colspan="9" scope="colgroup">' +
+                '<span class="retglabel">' + r.group + "</span></th></tr>";
         return;
       }
       var d = map[r.t];
