@@ -9,12 +9,12 @@
   var ENDPOINT = "https://scanner.tradingview.com/global/scan";
 
   var ROWS = [
-    { t: "NSE:NIFTY",        label: "Nifty 50",            note: "Large cap" },
+    { t: "NSE:NIFTY",        label: "Nifty 50",            note: "Large cap", k: "nifty50" },
     { t: "BSE:SENSEX",       label: "Sensex",              note: "30 companies" },
-    { t: "NSE:NIFTYJR",      label: "Nifty Next 50",       note: "The next tier" },
+    { t: "NSE:NIFTYJR",      label: "Nifty Next 50",       note: "The next tier", k: "niftynext50" },
     { t: "NSE:MID150BEES",   label: "Nifty Midcap 150",    note: "Mid cap — via its index ETF" },
     { t: "NSE:HDFCSML250",   label: "Nifty Smallcap 250",  note: "Small cap — via its index ETF" },
-    { t: "NSE:CNX500",       label: "Nifty 500",           note: "The broad market" },
+    { t: "NSE:CNX500",       label: "Nifty 500",           note: "The broad market", k: "nifty500" },
     { t: "TVC:GOLD",         label: "Gold",                note: "Spot, USD/oz" },
     { t: "MCX:GOLD1!",       label: "Gold (MCX)",          note: "Rupees, 10g" },
     { t: "NASDAQ:IXIC",      label: "Nasdaq Composite",    note: "United States" }
@@ -41,8 +41,8 @@
     return (Math.pow(growth, 1 / years) - 1) * 100;
   }
 
-  var HEADS = ["Level", "Today", "1M", "3M", "6M", "CY", "1Y",
-               "3Y CAGR", "5Y CAGR", "10Y CAGR"];
+  var HEADS = ["Level", "Today", "1M", "3M", "6M", "FY", "1Y",
+               "3Y CAGR", "5Y CAGR", "10Y CAGR", "15Y CAGR", "25Y CAGR"];
 
   function cell(pct, head) {
     var lab = ' data-h="' + head + '"';
@@ -65,23 +65,37 @@
     return [cagr(y3, 3), cagr(y5, 5), cagr(y10, 10)];
   }
 
+  /* Official NSE closes, refreshed daily into assets/data/indices.json, are
+     used wherever we have them — they cover every window including the
+     financial year and twenty-five years. The live feed fills the rest. */
+  var OFFICIAL = null;
+
   function draw(map) {
     var html = "";
     ROWS.forEach(function (r) {
       var d = map[r.t];
+      var o = (OFFICIAL && r.k && OFFICIAL.indices) ? OFFICIAL.indices[r.k] : null;
+
       html += "<tr>" +
         '<th scope="row"><span class="retname">' + r.label + "</span>" +
         '<span class="retnote2">' + r.note + "</span></th>";
-      if (!d) {
-        html += '<td class="retlevel" data-h="Level">&mdash;</td>';
-        for (var i = 1; i < HEADS.length; i++) html += cell(null, HEADS[i]);
-      } else {
-        var lr = longRuns(d);
-        html += '<td class="retlevel" data-h="Level">' + level(d[0]) + "</td>" +
-                cell(d[1], HEADS[1]) + cell(d[2], HEADS[2]) + cell(d[3], HEADS[3]) +
-                cell(d[4], HEADS[4]) + cell(d[5], HEADS[5]) + cell(d[6], HEADS[6]) +
-                cell(lr[0], HEADS[7]) + cell(lr[1], HEADS[8]) + cell(lr[2], HEADS[9]);
-      }
+
+      var lr = d ? longRuns(d) : [null, null, null];
+      var v = o ? [
+        o.level, o.today, o.m1, o.m3, o.m6, o.fy, o.y1,
+        o.y3, o.y5, o.y10, o.y15, o.y25
+      ] : [
+        d ? d[0] : null, d ? d[1] : null, d ? d[2] : null, d ? d[3] : null,
+        d ? d[4] : null, null, d ? d[6] : null,
+        lr[0], lr[1], lr[2], null, null
+      ];
+
+      /* the level and today's move always come from the live feed when it
+         has them, so the top of the table is never a day behind */
+      if (d) { v[0] = d[0]; v[1] = d[1]; }
+
+      html += '<td class="retlevel" data-h="Level">' + level(v[0]) + "</td>";
+      for (var i = 1; i < HEADS.length; i++) html += cell(v[i], HEADS[i]);
       html += "</tr>";
     });
     body.innerHTML = html;
@@ -94,7 +108,7 @@
 
   var tickers = ROWS.map(function (r) { return r.t; });
 
-  fetch(ENDPOINT, {
+  function liveTable() { return fetch(ENDPOINT, {
     method: "POST",
     headers: { "Content-Type": "text/plain" },
     body: JSON.stringify({
@@ -114,10 +128,18 @@
           ", read at " + new Date().toLocaleString("en-IN", {
             day: "numeric", month: "short", year: "numeric",
             hour: "2-digit", minute: "2-digit"
-          }) + ". A dash means the index has not existed that long.";
+          }) + ". " + (OFFICIAL
+            ? "Index returns are calculated from NSE's own published closes, refreshed after each session."
+            : "A dash means the index has not existed that long.");
       }
     })
-    .catch(fail);
+    .catch(fail); }
+
+  fetch("assets/data/indices.json", { cache: "no-cache" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) { OFFICIAL = j; })
+    .catch(function () {})
+    .then(liveTable);
 
   /* ------------------------------------------------- repo rates and CPI -- */
 
