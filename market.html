@@ -82,10 +82,10 @@
     <div class="shell">
       <div class="sec-head reveal">
         <span class="eyebrow">The long picture</span>
-        <h2 class="h2 balance">Sensex against gold, over decades.</h2>
-        <p>Set the range to ALL to see the whole history. Add or remove a comparison from the
-           chart&rsquo;s own symbol box &mdash; a fixed deposit sits at the flat line either of them
-           has to beat.</p>
+        <h2 class="h2 balance">The Sensex, over decades.</h2>
+        <p>Sensex on its own, back to the beginning. Set the range to ALL for the whole
+           history, and use the chart&rsquo;s own compare box to put anything you like beside it
+           &mdash; gold, a stock, an index.</p>
       </div>
         <div class="tvbox" style="height:520px">
           <div class="tradingview-widget-container" style="height:100%">
@@ -96,9 +96,6 @@
               "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
               "locale": "in", "hide_side_toolbar": true, "allow_symbol_change": true,
               "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
-              "compareSymbols": [
-                { "symbol": "TVC:GOLD", "position": "SameScale" }
-              ],
               "range": "ALL", "calendar": false, "support_host": "https://www.tradingview.com"
             }
             </script>
@@ -114,8 +111,7 @@
         <span class="eyebrow">Money and prices</span>
         <h2 class="h2 balance">What money costs, and what it buys.</h2>
         <p>The repo rate is the price of money. Inflation is what it loses while you hold it.
-           Between them they set the bar every investment has to clear. The chart below is
-           India&rsquo;s inflation over the last five years.</p>
+           Between them they set the bar every investment has to clear.</p>
       </div>
 
       <div class="ratecards reveal">
@@ -125,16 +121,19 @@
         <div class="ratecard"><span class="ratecard__k">US inflation (CPI)</span><b data-rate="ECONOMICS:USIRYY">&mdash;</b></div>
       </div>
 
-      <div class="tvbox" style="height:460px">
+      <div class="sec-head sec-head--sub reveal">
+        <h3 class="h3">Every release, with the date it was declared.</h3>
+        <p>India and the United States. Each line carries the figure that was announced,
+           what was expected, and what it replaced.</p>
+      </div>
+
+      <div class="tvbox" style="height:520px">
         <div class="tradingview-widget-container" style="height:100%">
           <div class="tradingview-widget-container__widget" style="height:100%"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-events.js" async>
           {
-            "width": "100%", "height": "100%", "symbol": "ECONOMICS:INIRYY",
-            "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
-            "locale": "in", "hide_side_toolbar": true, "allow_symbol_change": true,
-            "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
-            "range": "60M", "calendar": false, "support_host": "https://www.tradingview.com"
+            "width": "100%", "height": "100%", "colorTheme": "light", "isTransparent": true,
+            "locale": "in", "importanceFilter": "0,1", "countryFilter": "in,us"
           }
           </script>
         </div>
