@@ -101,6 +101,60 @@ def history(name):
     return sorted(series.items())
 
 
+
+# ------------------------------------------------------------------ yahoo --
+# Fallback when NSE will not answer a datacentre address, which it often
+# will not. Same closes, one step removed.
+
+YAHOO = {
+    "nifty50":     "%5ENSEI",
+    "niftynext50": "%5ENSMIDCP",
+    "midcap150":   "NIFTYMIDCAP150.NS",
+    "smallcap250": "NIFTYSMLCAP250.NS",
+    "nifty500":    "%5ECRSLDX",
+}
+
+
+def yahoo_history(key):
+    sym = YAHOO.get(key)
+    if not sym:
+        return []
+    for host in ("query1", "query2"):
+        url = ("https://%s.finance.yahoo.com/v8/finance/chart/%s"
+               "?range=max&interval=1d" % (host, sym))
+        try:
+            j = json.loads(http(url, headers={"Accept": "application/json"}))
+            r = (j.get("chart") or {}).get("result")
+            if not r:
+                continue
+            r = r[0]
+            ts = r.get("timestamp") or []
+            cl = r["indicators"]["quote"][0].get("close") or []
+            out = []
+            for i in range(min(len(ts), len(cl))):
+                if cl[i] is None:
+                    continue
+                out.append((date.fromtimestamp(ts[i]), float(cl[i])))
+            out.sort()
+            if len(out) > 200:
+                return out
+        except Exception as exc:                    # noqa: BLE001
+            print("  yahoo %s via %s failed: %s" % (key, host, exc))
+        time.sleep(2)
+    return []
+
+
+def fy_closes(series):
+    """The last close of each financial year, keyed by the year it ends in."""
+    out = {}
+    for d, c in series:
+        fy = d.year if d.month <= 3 else d.year + 1
+        cur = out.get(fy)
+        if cur is None or d > cur[0]:
+            out[fy] = (d, c)
+    return {str(k): round(v[1], 2) for k, v in out.items()}
+
+
 # ------------------------------------------------------------- the maths --
 
 def close_on_or_before(series, target):
@@ -166,26 +220,33 @@ def build(series):
         "y25": window(series, years=25),
         "points": len(series),
         "from": series[0][0].isoformat(),
+        "fyClose": fy_closes(series),
     }
 
 
 def main():
     out = {"generated": datetime.utcnow().isoformat(timespec="seconds") + "Z",
-           "source": "NSE Indices (niftyindices.com), official published closes",
+           "source": "NSE Indices where it answers, otherwise Yahoo Finance; each index says which",
            "indices": {}}
     ok = 0
     for name, key in INDICES:
         print("fetching %s ..." % name)
+        via = "NSE Indices"
         try:
             series = history(name)
         except Exception as exc:                   # noqa: BLE001
-            print("  failed entirely: %s" % exc)
-            continue
+            print("  NSE failed: %s" % exc)
+            series = []
         if len(series) < 200:
-            print("  only %d closes, skipping" % len(series))
+            print("  NSE gave %d closes, trying Yahoo" % len(series))
+            series = yahoo_history(key)
+            via = "Yahoo Finance"
+        if len(series) < 200:
+            print("  no usable history, skipping")
             continue
         out["indices"][key] = build(series)
         out["indices"][key]["name"] = name
+        out["indices"][key]["via"] = via
         ok += 1
         print("  %d closes, %s to %s" % (len(series), series[0][0], series[-1][0]))
 
