@@ -30,6 +30,7 @@ INDICES = [
     ("NIFTY MIDCAP 150",    "midcap150"),
     ("NIFTY SMALLCAP 250",  "smallcap250"),
     ("NIFTY 500",           "nifty500"),
+    ("BSE 500",             "bse500"),        # NSE has no such name; Yahoo serves it
 ]
 
 CTX = ssl.create_default_context()
@@ -120,6 +121,7 @@ YAHOO = {
     "midcap150":   "NIFTYMIDCAP150.NS",
     "smallcap250": "NIFTYSMLCAP250.NS",
     "nifty500":    "%5ECRSLDX",
+    "bse500":      "BSE-500.BO",
 }
 
 
