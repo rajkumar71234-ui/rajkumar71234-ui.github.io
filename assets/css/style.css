@@ -2604,3 +2604,23 @@ ul { margin: 0; padding: 0; list-style: none; }
 .facts--6 { grid-template-columns: repeat(6, 1fr); }
 @media (max-width: 1100px) { .facts--6 { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 700px)  { .facts--6 { grid-template-columns: repeat(2, 1fr); } }
+
+/* ------------------------------------------- market: price vs earnings */
+
+.lwc {
+  height: 460px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  margin-top: 4px;
+}
+.lwc-read {
+  margin-left: auto;
+  font-size: 0.86rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.lwc-read b { color: var(--ink); }
+@media (max-width: 700px) {
+  .lwc { height: 340px; }
+  .lwc-read { margin-left: 0; width: 100%; }
+}
