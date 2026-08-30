@@ -35,7 +35,7 @@ INDICES = [
 CTX = ssl.create_default_context()
 
 
-def http(url, data=None, headers=None, timeout=45):
+def http(url, data=None, headers=None, timeout=20):
     req = urllib.request.Request(url, data=data, method="POST" if data else "GET")
     req.add_header("User-Agent", UA)
     req.add_header("Accept-Language", "en-IN,en;q=0.9")
@@ -78,26 +78,34 @@ def nifty_chunk(name, start, end):
     return out
 
 
+NSE_REACHABLE = None      # decided once, on the first attempt of the run
+
+
 def history(name):
-    """Twenty-six years, pulled in chunks so no single request is too large."""
+    """Twenty-six years, in chunks. Gives up on NSE the moment it is clear
+    NSE will not talk to this machine, rather than retrying for an hour."""
+    global NSE_REACHABLE
+    if NSE_REACHABLE is False:
+        return []
+
     today = date.today()
     series = {}
-    start_year = today.year - 26
-    for y in range(start_year, today.year + 1, 3):
+    for y in range(today.year - 26, today.year + 1, 3):
         a = date(y, 1, 1)
         b = min(date(y + 2, 12, 31), today)
         if b < a:
             continue
-        for attempt in range(3):
-            try:
-                for d, c in nifty_chunk(name, a, b):
-                    series[d] = c
-                break
-            except Exception as exc:              # noqa: BLE001
-                if attempt == 2:
-                    print("  chunk %s %s-%s failed: %s" % (name, a, b, exc))
-                time.sleep(2 + attempt * 3)
-        time.sleep(1.0)
+        try:
+            for d, c in nifty_chunk(name, a, b):
+                series[d] = c
+            NSE_REACHABLE = True
+        except Exception as exc:                  # noqa: BLE001
+            if NSE_REACHABLE is None:
+                NSE_REACHABLE = False
+                print("  NSE will not answer this machine (%s) — using Yahoo" % exc)
+                return []
+            print("  chunk %s %s-%s failed: %s" % (name, a, b, exc))
+        time.sleep(0.6)
     return sorted(series.items())
 
 
