@@ -352,8 +352,10 @@
   }
 
   function buildEarnings() {
-    var host = document.getElementById("cx-gdpeps");
-    if (!host) return;
+    var host = document.getElementById("cx-gdpeps");     /* may be absent now */
+    var anchor = document.getElementById("cx-n500pe");
+    if (!host && !anchor) return;
+    var fail = function (msg) { if (host) host.innerHTML = '<span class="cx-none">' + msg + "</span>"; };
 
     var profits = fetch(ENDPOINT.replace("/global/", "/india/"), {
       method: "POST",
@@ -402,7 +404,7 @@
       /* only years where nearly every company has reported */
       var years = Object.keys(by).map(Number).sort(function (p, q) { return p - q; })
         .filter(function (y) { return by[y].n >= 400; });
-      if (years.length < 4) { host.innerHTML = '<span class="cx-none">Not enough reported years yet.</span>'; return; }
+      if (years.length < 4) { fail("Not enough reported years yet."); return; }
 
       /* the index's own close at the end of each financial year, written by
          the daily job into assets/data/indices.json */
@@ -417,7 +419,7 @@
         pts.push({ t: lab, v: by[y].s });
         gts.push({ t: lab, v: +lv });
       });
-      if (pts.length < 4) { host.innerHTML = '<span class="cx-none">History not available.</span>'; return; }
+      if (pts.length < 4) { fail("History not available."); return; }
 
       if (prEl) prEl.textContent = "₹" + (pts[pts.length - 1].v / 1e7 / 1e5).toFixed(2) + " lakh cr";
       if (gdEl) {
@@ -428,16 +430,18 @@
       var fromEl = document.getElementById("cx-gdpeps-from");
       if (fromEl) fromEl.textContent = pts[0].t + " to " + pts[pts.length - 1].t;
 
-      host.innerHTML = svgDual(rebase(pts), rebase(gts),
-                               "Nifty 500 earnings", "Nifty 500 index");
+      if (host) {
+        host.innerHTML = svgDual(rebase(pts), rebase(gts),
+                                 "Nifty 500 earnings", "Nifty 500 index");
+      }
     }).catch(function () {
-      host.innerHTML = '<span class="cx-none">The feed did not answer. Refresh in a moment.</span>';
+      fail("The feed did not answer. Refresh in a moment.");
     });
   }
 
   /* the constituent pull is the heaviest request on the page, so it goes
      last — after everything above has already painted */
-  if (document.getElementById("cx-gdpeps")) {
+  if (document.getElementById("cx-gdpeps") || document.getElementById("cx-n500pe")) {
     var go = function () { setTimeout(buildEarnings, 400); };
     if (document.readyState === "complete") go();
     else window.addEventListener("load", go);
