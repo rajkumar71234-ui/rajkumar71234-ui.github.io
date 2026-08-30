@@ -154,6 +154,16 @@ def yahoo_history(key):
     return []
 
 
+def monthly(series):
+    """One close per month, so the page can draw a real price line."""
+    out = {}
+    for d, c in series:
+        out[(d.year, d.month)] = (d, c)
+    rows = [(v[0], v[1]) for v in out.values()]
+    rows.sort()
+    return [[d.isoformat(), round(c, 2)] for d, c in rows]
+
+
 def fy_closes(series):
     """The last close of each financial year, keyed by the year it ends in."""
     out = {}
@@ -257,6 +267,8 @@ def main():
         out["indices"][key] = build(series)
         out["indices"][key]["name"] = name
         out["indices"][key]["via"] = via
+        if key == "bse500":                       # the one the chart draws
+            out["indices"][key]["monthly"] = monthly(series)
         ok += 1
         print("  %d closes, %s to %s" % (len(series), series[0][0], series[-1][0]))
 
