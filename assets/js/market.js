@@ -433,7 +433,26 @@
       var fromEl = document.getElementById("cx-gdpeps-from");
       if (fromEl) fromEl.textContent = pts[0].t + " to " + pts[pts.length - 1].t;
 
-      if (host) {
+      /* earnings expressed in index points: scale the combined profit so the
+         latest year equals the index's own EPS today, then every earlier year
+         sits on the same axis as the price */
+      var lvlNow2 = (((OFFICIAL || {}).indices || {}).bse500 || {}).level;
+      var epsNow = (lvlNow2 && pe) ? lvlNow2 / pe : null;
+      var scale = (epsNow && pts.length) ? epsNow / pts[pts.length - 1].v : null;
+
+      var epsSeries = [];
+      if (scale) {
+        years.forEach(function (y) {
+          if (!by[y]) return;
+          epsSeries.push({ time: y + "-03-31", value: +(by[y].s * scale).toFixed(2) });
+        });
+        epsSeries.sort(function (a, b) { return a.time < b.time ? -1 : 1; });
+      }
+
+      var rows = ((((OFFICIAL || {}).indices || {}).bse500 || {}).monthly) || [];
+      var drew = drawIndexChart(rows, epsSeries, epsNow);
+
+      if (!drew && host) {
         host.innerHTML = svgDual(rebase(pts), rebase(gts),
                                  "BSE 500 earnings", "BSE 500 index");
       }
@@ -547,5 +566,70 @@
   }
 
   if (document.getElementById("cx-qgdp")) buildQuarterly();
+
+
+  /* ==================================================================
+     One chart, two lines: the BSE 500 and the earnings underneath it.
+
+     TradingView publishes no earnings series for an index, so their
+     embed widget cannot show this. We use their charting library
+     instead and supply both series ourselves — the index from its own
+     month-end closes, the earnings from all 500 companies' filings,
+     scaled so the latest point equals the index's actual EPS today.
+     ================================================================== */
+
+  function drawIndexChart(monthlyRows, epsPoints, epsNow) {
+    var el = document.getElementById("cx-lwc");
+    if (!el || !window.LightweightCharts || !monthlyRows || !monthlyRows.length) return false;
+
+    var chart = LightweightCharts.createChart(el, {
+      layout: { background: { color: "#FAF8F5" }, textColor: "#74604B", fontSize: 11,
+                fontFamily: "Inter, system-ui, sans-serif" },
+      grid: { vertLines: { color: "rgba(228,223,214,0.7)" },
+              horzLines: { color: "rgba(228,223,214,0.7)" } },
+      rightPriceScale: { borderColor: "#E4DFD6", scaleMargins: { top: 0.12, bottom: 0.08 } },
+      timeScale: { borderColor: "#E4DFD6", rightOffset: 4, fixLeftEdge: true },
+      crosshair: { mode: 0, vertLine: { color: "#B9AF9F", labelBackgroundColor: "#74604B" },
+                   horzLine: { color: "#B9AF9F", labelBackgroundColor: "#74604B" } },
+      handleScale: true, handleScroll: true, autoSize: true
+    });
+
+    var price = chart.addLineSeries({
+      color: "#74604B", lineWidth: 2, priceLineVisible: false,
+      title: "BSE 500", lastValueVisible: true
+    });
+    price.setData(monthlyRows.map(function (r) { return { time: r[0], value: r[1] }; }));
+
+    var eps = chart.addLineSeries({
+      color: "#E0402B", lineWidth: 2, lineStyle: 0, priceLineVisible: false,
+      title: "Earnings", lastValueVisible: true
+    });
+    if (epsPoints.length) eps.setData(epsPoints);
+
+    chart.timeScale().fitContent();
+    window.addEventListener("resize", function () { chart.timeScale().fitContent(); });
+
+    /* read-out that follows the cursor, the way a chart should */
+    var read = document.getElementById("cx-lwc-read");
+    if (read) {
+      var fmt = function (v) {
+        return v == null ? "—" : Math.round(v).toLocaleString("en-IN");
+      };
+      var base = function () {
+        var last = monthlyRows[monthlyRows.length - 1];
+        read.innerHTML = '<b>' + fmt(last[1]) + '</b> index &nbsp;·&nbsp; <b>' +
+                         fmt(epsNow) + "</b> earnings per index point";
+      };
+      base();
+      chart.subscribeCrosshairMove(function (p) {
+        if (!p || !p.time || !p.seriesData) { base(); return; }
+        var a = p.seriesData.get(price), b = p.seriesData.get(eps);
+        read.innerHTML = '<b>' + fmt(a && a.value) + "</b> index &nbsp;·&nbsp; <b>" +
+                         fmt(b && b.value) + "</b> earnings &nbsp;·&nbsp; " +
+                         (a && b && b.value ? (a.value / b.value).toFixed(1) + "× earnings" : "");
+      });
+    }
+    return true;
+  }
 
 })();
