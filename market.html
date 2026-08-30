@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20260829j">
+<link rel="stylesheet" href="assets/css/style.css?v=20260829k">
 </head>
 <body>
 
@@ -81,43 +81,23 @@
       <p class="tvcredit" id="retstamp"></p>
 
       <div class="sec-head sec-head--sub reveal">
-        <h3 class="h3">The broad market, and what it is being paid for.</h3>
-        <p>The BSE&nbsp;500 &mdash; the same 500-company slice of the market as the
-           Nifty&nbsp;500, and the one an exchange lets us show live. Zoom it, change the range,
-           or use the chart&rsquo;s own compare box to put anything beside it. Underneath sit the
-           earnings behind that price, read from all 500 companies&rsquo; own filings.</p>
-      </div>
-
-      <div class="tvbox reveal" style="height:520px">
-        <div class="tradingview-widget-container" style="height:100%">
-          <div class="tradingview-widget-container__widget" style="height:100%"></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-          {
-            "width": "100%", "height": "100%", "symbol": "BSE:BSE500",
-            "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
-            "locale": "in", "hide_side_toolbar": false, "allow_symbol_change": true,
-            "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
-            "range": "ALL", "calendar": false, "support_host": "https://www.tradingview.com"
-          }
-          </script>
-        </div>
-      </div>
-
       <div class="sec-head sec-head--sub reveal">
-        <h3 class="h3">Price against earnings, side by side.</h3>
-        <p>The same index and the profits underneath it, both starting at 100 in
-           <span id="cx-gdpeps-from">&mdash;</span>. The earnings line is the combined net profit
-           of all 500 companies, summed from their own filings by the financial year each one
-           reported. Where the two lines separate is the market re-rating &mdash; paying more, or
-           less, for the same rupee of profit.</p>
+        <h3 class="h3">Price and earnings on one chart.</h3>
+        <p>The BSE&nbsp;500 since 2005, with the earnings behind it drawn on the same scale
+           &mdash; the combined net profit of all 500 companies, expressed per index point and
+           anchored to the index&rsquo;s own EPS today. Drag to pan, scroll to zoom, hover to read
+           both lines and the multiple between them, from
+           <span id="cx-gdpeps-from">&mdash;</span>.</p>
       </div>
 
       <div class="gdp gdp--wide reveal">
         <div class="gdp__head gdp__head--legend">
-          <span class="lg lg--a">BSE 500 earnings</span>
           <span class="lg lg--b">BSE 500 index</span>
+          <span class="lg lg--a">Earnings, per index point</span>
+          <span class="lwc-read" id="cx-lwc-read"></span>
         </div>
-        <div class="macro__chart macro__chart--tall" id="cx-gdpeps"></div>
+        <div class="lwc" id="cx-lwc"></div>
+        <div class="macro__chart macro__chart--tall" id="cx-gdpeps" hidden></div>
         <div class="facts facts--6">
           <div class="fact"><span class="fact__k">Index level</span><b id="cx-n500lvl">&mdash;</b></div>
           <div class="fact"><span class="fact__k">Combined market value</span><b id="cx-n500mcap">&mdash;</b></div>
@@ -327,7 +307,8 @@
 </main>
 
 
-<script src="assets/js/main.js?v=20260829j"></script>
-<script src="assets/js/market.js?v=20260829j"></script>
+<script src="assets/js/main.js?v=20260829k"></script>
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script src="assets/js/market.js?v=20260829k"></script>
 </body>
 </html>
