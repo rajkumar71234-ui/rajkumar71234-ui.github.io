@@ -391,7 +391,12 @@
         set("cx-n500eps", (100 / pe).toFixed(2) + "%");
       }
       if (mcap > 0) {
-        set("cx-n500lvl", "₹" + (mcap / 1e7 / 1e5).toFixed(2) + " lakh cr");
+        set("cx-n500mcap", "₹" + (mcap / 1e7 / 1e5).toFixed(2) + " lakh cr");
+      }
+      var lvlNow = (((OFFICIAL || {}).indices || {}).bse500 || {}).level;
+      if (lvlNow) {
+        set("cx-n500lvl", Math.round(lvlNow).toLocaleString("en-IN"));
+        if (pe) set("cx-n500eps", "₹" + Math.round(lvlNow / pe).toLocaleString("en-IN"));
       }
       var prEl = document.getElementById("cx-n500profit");
       var gdEl = document.getElementById("cx-gdpshare");
@@ -405,8 +410,9 @@
 
       /* the index's own close at the end of each financial year, written by
          the daily job into assets/data/indices.json */
-      var lvlBy = (OFFICIAL && OFFICIAL.indices && OFFICIAL.indices.nifty500 &&
-                   OFFICIAL.indices.nifty500.fyClose) || {};
+      var idx = (OFFICIAL && OFFICIAL.indices) || {};
+      var src = idx.bse500 || idx.nifty500 || {};
+      var lvlBy = src.fyClose || {};
 
       var pts = [], gts = [];
       years.forEach(function (y) {
@@ -429,7 +435,7 @@
 
       if (host) {
         host.innerHTML = svgDual(rebase(pts), rebase(gts),
-                                 "Nifty 500 earnings", "Nifty 500 index");
+                                 "BSE 500 earnings", "BSE 500 index");
       }
     }).catch(function () {
       fail("The feed did not answer. Refresh in a moment.");
