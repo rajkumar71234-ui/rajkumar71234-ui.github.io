@@ -367,21 +367,7 @@
       })
     }).then(function (r) { return r.json(); });
 
-    var level = fetch(ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify({
-        symbols: { tickers: ["BSE:BSE500"], query: { types: [] } },
-        columns: ["close"]
-      })
-    }).then(function (r) { return r.json(); })
-      .then(function (k) {
-        var row = (k.data || [])[0];
-        if (row && typeof row.d[0] === "number") window.__n500level = row.d[0];
-      })
-      .catch(function () {});
-
-    Promise.all([profits, level]).then(function (res) {
+    Promise.all([profits]).then(function (res) {
       var j = res[0];
       var by = {}, mcap = 0, nittm = 0;
       (j.data || []).forEach(function (row) {
@@ -399,15 +385,13 @@
 
       /* live valuation of the whole index, from its own constituents */
       var pe = nittm > 0 ? mcap / nittm : null;
-      var peEl = document.getElementById("cx-n500pe");
-      if (peEl && pe) peEl.textContent = pe.toFixed(1) + "×";
-      var epsEl = document.getElementById("cx-n500eps");
-      var lvl = document.getElementById("cx-n500lvl");
-      if (epsEl && pe && window.__n500level) {
-        epsEl.textContent = "₹" + Math.round(window.__n500level / pe).toLocaleString("en-IN");
+      var set = function (id, txt) { var e = document.getElementById(id); if (e) e.textContent = txt; };
+      if (pe) {
+        set("cx-n500pe", pe.toFixed(1) + "×");
+        set("cx-n500eps", (100 / pe).toFixed(2) + "%");
       }
-      if (lvl && window.__n500level) {
-        lvl.textContent = window.__n500level.toLocaleString("en-IN", { maximumFractionDigits: 0 });
+      if (mcap > 0) {
+        set("cx-n500lvl", "₹" + (mcap / 1e7 / 1e5).toFixed(2) + " lakh cr");
       }
       var prEl = document.getElementById("cx-n500profit");
       var gdEl = document.getElementById("cx-gdpshare");
