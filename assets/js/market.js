@@ -582,51 +582,98 @@
     var el = document.getElementById("cx-lwc");
     if (!el || !window.LightweightCharts || !monthlyRows || !monthlyRows.length) return false;
 
+    /* Both series are rebased to 100 at the left edge of whatever you are
+       looking at, and re-based again whenever you zoom or pan — otherwise a
+       line at 36,000 and a line at 1,600 share an axis and the comparison
+       says nothing. This is how a compare view is meant to behave. */
+
+    var priceRaw = monthlyRows.map(function (r) { return { time: r[0], value: r[1] }; });
+    var epsRaw = (epsPoints || []).slice();
+
+    /* the comparison can only start where both series exist */
+    var commonStart = epsRaw.length ? epsRaw[0].time : priceRaw[0].time;
+
     var chart = LightweightCharts.createChart(el, {
       layout: { background: { color: "#FAF8F5" }, textColor: "#74604B", fontSize: 11,
-                fontFamily: "Inter, system-ui, sans-serif" },
+                fontFamily: "Inter, system-ui, sans-serif", attributionLogo: false },
       grid: { vertLines: { color: "rgba(228,223,214,0.7)" },
               horzLines: { color: "rgba(228,223,214,0.7)" } },
-      rightPriceScale: { borderColor: "#E4DFD6", scaleMargins: { top: 0.12, bottom: 0.08 } },
-      timeScale: { borderColor: "#E4DFD6", rightOffset: 4, fixLeftEdge: true },
+      rightPriceScale: { borderColor: "#E4DFD6", scaleMargins: { top: 0.12, bottom: 0.1 } },
+      timeScale: { borderColor: "#E4DFD6", rightOffset: 3, fixLeftEdge: true, fixRightEdge: true },
       crosshair: { mode: 0, vertLine: { color: "#B9AF9F", labelBackgroundColor: "#74604B" },
                    horzLine: { color: "#B9AF9F", labelBackgroundColor: "#74604B" } },
+      localization: {
+        priceFormatter: function (v) { return (v >= 0 ? "+" : "") + (v - 100).toFixed(0) + "%"; }
+      },
       handleScale: true, handleScroll: true, autoSize: true
     });
 
-    var price = chart.addLineSeries({
-      color: "#74604B", lineWidth: 2, priceLineVisible: false,
-      title: "BSE 500", lastValueVisible: true
-    });
-    price.setData(monthlyRows.map(function (r) { return { time: r[0], value: r[1] }; }));
+    var opts = { priceLineVisible: false, lastValueVisible: true, lineWidth: 2,
+                 priceFormat: { type: "custom", formatter: function (v) {
+                   return (v >= 100 ? "+" : "") + (v - 100).toFixed(1) + "%"; } } };
 
-    var eps = chart.addLineSeries({
-      color: "#E0402B", lineWidth: 2, lineStyle: 0, priceLineVisible: false,
-      title: "Earnings", lastValueVisible: true
-    });
-    if (epsPoints.length) eps.setData(epsPoints);
+    var priceS = chart.addLineSeries(Object.assign({ color: "#74604B", title: "Index" }, opts));
+    var epsS   = chart.addLineSeries(Object.assign({ color: "#E0402B", title: "Earnings" }, opts));
 
+    function valueAt(rows, t) {
+      var best = null;
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].time <= t) best = rows[i]; else break;
+      }
+      return best ? best.value : (rows.length ? rows[0].value : null);
+    }
+
+    function rebaseTo(t) {
+      var base = t < commonStart ? commonStart : t;
+      var pb = valueAt(priceRaw, base), eb = epsRaw.length ? valueAt(epsRaw, base) : null;
+      if (!pb) return;
+      priceS.setData(priceRaw.map(function (d) {
+        return { time: d.time, value: +((d.value / pb) * 100).toFixed(2) };
+      }));
+      if (eb) {
+        epsS.setData(epsRaw.map(function (d) {
+          return { time: d.time, value: +((d.value / eb) * 100).toFixed(2) };
+        }));
+      }
+    }
+
+    rebaseTo(commonStart);
     chart.timeScale().fitContent();
-    window.addEventListener("resize", function () { chart.timeScale().fitContent(); });
 
-    /* read-out that follows the cursor, the way a chart should */
+    /* re-anchor to the new left edge after a zoom or a pan */
+    var lastBase = null, busy = false;
+    chart.timeScale().subscribeVisibleTimeRangeChange(function (range) {
+      if (!range || busy) return;
+      var from = range.from;
+      if (typeof from === "object") {
+        from = from.year + "-" + String(from.month).padStart(2, "0") + "-" +
+               String(from.day).padStart(2, "0");
+      } else if (typeof from === "number") {
+        from = new Date(from * 1000).toISOString().slice(0, 10);
+      }
+      if (from === lastBase) return;
+      lastBase = from;
+      busy = true;
+      rebaseTo(from);
+      setTimeout(function () { busy = false; }, 0);
+    });
+
     var read = document.getElementById("cx-lwc-read");
     if (read) {
-      var fmt = function (v) {
-        return v == null ? "—" : Math.round(v).toLocaleString("en-IN");
+      var pct = function (v) {
+        return v == null ? "—" : (v >= 100 ? "+" : "") + (v - 100).toFixed(1) + "%";
       };
       var base = function () {
-        var last = monthlyRows[monthlyRows.length - 1];
-        read.innerHTML = '<b>' + fmt(last[1]) + '</b> index &nbsp;·&nbsp; <b>' +
-                         fmt(epsNow) + "</b> earnings per index point";
+        read.innerHTML = "Both lines start at zero on the left edge. " +
+                         "Latest index EPS <b>&#8377;" +
+                         (epsNow ? Math.round(epsNow).toLocaleString("en-IN") : "—") + "</b>.";
       };
       base();
       chart.subscribeCrosshairMove(function (p) {
         if (!p || !p.time || !p.seriesData) { base(); return; }
-        var a = p.seriesData.get(price), b = p.seriesData.get(eps);
-        read.innerHTML = '<b>' + fmt(a && a.value) + "</b> index &nbsp;·&nbsp; <b>" +
-                         fmt(b && b.value) + "</b> earnings &nbsp;·&nbsp; " +
-                         (a && b && b.value ? (a.value / b.value).toFixed(1) + "× earnings" : "");
+        var a = p.seriesData.get(priceS), b = p.seriesData.get(epsS);
+        read.innerHTML = "Index <b>" + pct(a && a.value) + "</b> &nbsp;·&nbsp; earnings <b>" +
+                         pct(b && b.value) + "</b> since the left edge";
       });
     }
     return true;
