@@ -90,9 +90,10 @@
         lr[0], lr[1], lr[2], null, null
       ];
 
-      /* the level and today's move always come from the live feed when it
-         has them, so the top of the table is never a day behind */
-      if (d) { v[0] = d[0]; v[1] = d[1]; }
+      /* the live feed keeps the level and today's move current, but only
+         where its ticker really is the index — for the two rows quoted off
+         an ETF the index's own close is the honest number */
+      if (d && !(o && r.etf)) { v[0] = d[0]; v[1] = d[1]; }
 
       html += '<td class="retlevel" data-h="Level">' + level(v[0]) + "</td>";
       for (var i = 1; i < HEADS.length; i++) html += cell(v[i], HEADS[i]);
