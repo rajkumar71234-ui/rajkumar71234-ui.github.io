@@ -121,7 +121,6 @@
     .then(function (j) {
       var map = {};
       (j.data || []).forEach(function (row) { map[row.s] = row.d; });
-      if (map["NSE:CNX500"]) window.__n500level = map["NSE:CNX500"][0];
       draw(map);
       if (stamp) {
         stamp.innerHTML = "Live from the exchanges via " +
@@ -361,14 +360,28 @@
       method: "POST",
       headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({
-        symbols: { query: { types: ["stock"] }, symbolset: ["SYML:NSE;CNX500"] },
+        symbols: { query: { types: ["stock"] }, symbolset: ["SYML:BSE;BSE500"] },
         columns: ["fiscal_period_fy_h", "net_income_fy_h", "market_cap_basic", "net_income_ttm",
                    "sector", "Perf.3M", "total_revenue_fq_h"],
         range: [0, 500]
       })
     }).then(function (r) { return r.json(); });
 
-    Promise.all([profits]).then(function (res) {
+    var level = fetch(ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        symbols: { tickers: ["BSE:BSE500"], query: { types: [] } },
+        columns: ["close"]
+      })
+    }).then(function (r) { return r.json(); })
+      .then(function (k) {
+        var row = (k.data || [])[0];
+        if (row && typeof row.d[0] === "number") window.__n500level = row.d[0];
+      })
+      .catch(function () {});
+
+    Promise.all([profits, level]).then(function (res) {
       var j = res[0];
       var by = {}, mcap = 0, nittm = 0;
       (j.data || []).forEach(function (row) {
