@@ -1,5 +1,5 @@
 /* =========================================================================
-   Minimal Wealth Advisory — lumpsum, step-up SIP and retirement/SWP tools.
+   Minimal Wealth Advisory — lumpsum, step-up SIP and SWP tools.
    Standard time-value-of-money maths, run month by month in the browser.
    Nothing is sent anywhere.
    ========================================================================= */
@@ -116,87 +116,71 @@
           "Add a yearly step-up to see what a rising income does to the same plan.");
   }
 
-  /* ------------------------------------------------ retirement and SWP -- */
+  /* ------------------------------------------------------------- SWP -- */
 
-  /* corpus at retirement, from what you hold plus the monthly SIP */
-  function accumulate(corpus, sip, years, ratePct) {
-    var rm = monthly(ratePct), months = Math.round(years * 12), v = corpus;
-    for (var m = 1; m <= months; m++) v = v * (1 + rm) + sip;
-    return v;
-  }
-
-  /* draw an inflating income from the corpus; returns how long it lasts */
-  function drawDown(corpus, firstMonthly, years, postPct, inflPct) {
-    var rm = monthly(postPct), months = Math.round(years * 12);
-    var v = corpus, draw = firstMonthly;
+  /* Draw an income out of a corpus month by month. The withdrawal is raised
+     once a year if a step-up is set. Returns how long it lasted, what was
+     taken out along the way and what is left at the end. */
+  function drawDown(corpus, firstMonthly, years, ratePct, stepPct) {
+    var rm = monthly(ratePct), months = Math.round(years * 12);
+    var v = corpus, draw = firstMonthly, taken = 0, last = firstMonthly;
     for (var m = 1; m <= months; m++) {
-      v = v * (1 + rm) - draw;
-      if (v <= 0) return { lasted: m, survives: false };
-      if (m % 12 === 0) draw = draw * (1 + inflPct / 100);
+      v = v * (1 + rm);
+      var paid = Math.min(draw, Math.max(v, 0));
+      v -= paid;
+      taken += paid;
+      last = draw;
+      if (v <= 0) return { months: m, survives: false, left: 0, taken: taken, last: last };
+      if (m % 12 === 0) draw = draw * (1 + stepPct / 100);
     }
-    return { lasted: months, survives: true, left: v };
+    return { months: months, survives: true, left: v, taken: taken, last: last };
   }
 
-  /* corpus that would survive the whole retirement, found by bisection */
-  function corpusNeeded(firstMonthly, years, postPct, inflPct) {
-    var lo = 0, hi = firstMonthly * 12 * years * 3 + 1e6;
-    for (var i = 0; i < 80; i++) {
+  /* the monthly withdrawal that would just see the whole term out */
+  function safeDraw(corpus, years, ratePct, stepPct) {
+    var lo = 0, hi = corpus / 12 + 1000;
+    while (drawDown(corpus, hi, years, ratePct, stepPct).survives && hi < corpus) hi *= 2;
+    for (var i = 0; i < 70; i++) {
       var mid = (lo + hi) / 2;
-      if (drawDown(mid, firstMonthly, years, postPct, inflPct).survives) hi = mid; else lo = mid;
+      if (drawDown(corpus, mid, years, ratePct, stepPct).survives) lo = mid; else hi = mid;
     }
-    return hi;
+    return lo;
   }
 
-  function runRet() {
-    if (!$("r-age")) return;
-    var age = num("r-age"), retire = num("r-retire"), life = num("r-life");
-    var toGo = Math.max(0, retire - age);
-    var span = Math.max(1, life - retire);
+  function spell(months) {
+    var y = Math.floor(months / 12), m = months % 12;
+    if (y <= 0) return m + (m === 1 ? " month" : " months");
+    return y + (y === 1 ? " year" : " years") +
+           (m ? " " + m + (m === 1 ? " month" : " months") : "");
+  }
 
-    var expense = num("r-expense");
-    var infl = num("r-infl"), pre = num("r-pre"), post = num("r-post");
+  function runSwp() {
+    if (!$("w-corpus")) return;
+    var corpus = num("w-corpus"), draw = num("w-draw"), years = Math.max(1, num("w-years"));
+    var rate = num("w-rate"), step = num("w-step");
 
-    var have = accumulate(num("r-corpus"), num("r-sip"), toGo, pre);
-    var firstDraw = expense * Math.pow(1 + infl / 100, toGo);
-    var need = corpusNeeded(firstDraw, span, post, infl);
-    var gap = have - need;
+    var run = drawDown(corpus, draw, years, rate, step);
+    var safe = safeDraw(corpus, years, rate, step);
 
-    set("r-have", rupees(have));
-    set("r-need", rupees(need));
-    set("r-gap", (gap >= 0 ? "+" : "") + rupees(gap));
-    $("r-gap").className = gap >= 0 ? "is-good" : "is-short";
-    set("r-draw", rupees(firstDraw) + " a month");
+    set("w-lasts", run.survives ? "Past " + years + " years" : spell(run.months));
+    set("w-left", run.survives ? rupees(run.left) : "Nothing");
+    set("w-total", rupees(run.taken));
+    set("w-final", rupees(run.last) + " a month");
+    set("w-safe", rupees(Math.floor(safe / 100) * 100) + " a month");
+    set("w-rateout", corpus > 0 ? ((draw * 12 / corpus) * 100).toFixed(2) + "% of the corpus" : "—");
 
-    /* how long the corpus you will actually have would last */
-    var run = drawDown(have, firstDraw, 60, post, infl);
-    set("r-runout", run.survives && run.lasted >= span * 12
-      ? "Lasts past " + life
-      : "Age " + Math.floor(retire + run.lasted / 12));
+    var el = $("w-left");
+    if (el) el.className = run.survives ? "is-good" : "is-short";
 
-    /* the SIP that would close the gap */
-    if (gap >= 0) {
-      set("r-sipneed", "Already covered");
-    } else if (toGo <= 0) {
-      set("r-sipneed", "No years left to invest");
-    } else {
-      var lo = 0, hi = 1000;
-      while (accumulate(num("r-corpus"), hi, toGo, pre) < need && hi < 1e9) hi *= 2;
-      for (var i = 0; i < 60; i++) {
-        var mid = (lo + hi) / 2;
-        if (accumulate(num("r-corpus"), mid, toGo, pre) < need) lo = mid; else hi = mid;
-      }
-      set("r-sipneed", rupees(Math.ceil(hi / 100) * 100) + " a month");
-    }
-
-    verdict("r-verdict", gap >= 0,
-      gap >= 0
-        ? "<strong>You get there.</strong> On these assumptions you retire at " + retire +
-          " with about " + shortRupees(have) + ", against the " + shortRupees(need) +
-          " the plan needs."
-        : "<strong>Short by about " + shortRupees(-gap) + ".</strong> " +
-          "At " + retire + " you would have " + shortRupees(have) + " against " +
-          shortRupees(need) + " needed to draw " + shortRupees(firstDraw) +
-          " a month, rising with inflation, until " + life + ".");
+    verdict("w-verdict", run.survives,
+      run.survives
+        ? "<strong>The corpus holds.</strong> Drawing " + shortRupees(draw) +
+          " a month" + (step > 0 ? ", rising " + step + "% a year," : ",") +
+          " leaves about " + shortRupees(run.left) + " after " + years + " years."
+        : "<strong>It runs out after " + spell(run.months) + ".</strong> " +
+          "To make it through " + years + " years on these assumptions the withdrawal has to " +
+          "start at about " + shortRupees(safe) + " a month instead of " +
+          shortRupees(draw) + ".");
   }
 
   /* ------------------------------------------------------------- wire -- */
@@ -211,5 +195,5 @@
 
   bind("lump-form", runLump);
   bind("step-form", runStep);
-  bind("ret-form", runRet);
+  bind("swp-form", runSwp);
 })();
