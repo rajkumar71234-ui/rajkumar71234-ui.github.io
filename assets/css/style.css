@@ -2608,10 +2608,11 @@ ul { margin: 0; padding: 0; list-style: none; }
 /* ------------------------------------------- market: price vs earnings */
 
 .lwc {
-  height: 460px;
+  height: 474px;
   border: 1px solid var(--line);
   background: var(--bg);
   margin-top: 4px;
+  padding-top: 14px;
 }
 .lwc-read {
   margin-left: auto;
@@ -2621,6 +2622,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .lwc-read b { color: var(--ink); }
 @media (max-width: 700px) {
-  .lwc { height: 340px; }
+  .lwc { height: 354px; }
   .lwc-read { margin-left: 0; width: 100%; }
 }
