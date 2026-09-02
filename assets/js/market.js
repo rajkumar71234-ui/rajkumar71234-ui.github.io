@@ -141,6 +141,21 @@
     .catch(function () {})
     .then(liveTable);
 
+  /* Our own month-end series for the BSE 500 — index level and trailing
+     earnings per index point, back to 1999. It is the only place a real
+     earnings history for the index exists, so the chart is drawn from it
+     rather than from anything a data vendor will licence. */
+  var CHART_DREW = false;
+  fetch("assets/data/bse500.json", { cache: "no-cache" })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (j) {
+      if (!j) return;
+      var go = function () { CHART_DREW = drawIndexChart(j); };
+      if (window.LightweightCharts) go();
+      else window.addEventListener("load", go);
+    })
+    .catch(function () {});
+
   /* ------------------------------------------------- repo rates and CPI -- */
 
   var rateEls = document.querySelectorAll("[data-rate]");
@@ -430,8 +445,6 @@
         gdEl.textContent = (pg > eg ? "Price, by " : "Earnings, by ") +
           (Math.abs(pg / eg - 1) * 100).toFixed(0) + "%";
       }
-      var fromEl = document.getElementById("cx-gdpeps-from");
-      if (fromEl) fromEl.textContent = pts[0].t + " to " + pts[pts.length - 1].t;
 
       /* earnings expressed in index points: scale the combined profit so the
          latest year equals the index's own EPS today, then every earlier year
@@ -449,10 +462,8 @@
         epsSeries.sort(function (a, b) { return a.time < b.time ? -1 : 1; });
       }
 
-      var rows = ((((OFFICIAL || {}).indices || {}).bse500 || {}).monthly) || [];
-      var drew = drawIndexChart(rows, epsSeries, epsNow);
-
-      if (!drew && host) {
+      if (!CHART_DREW && host) {
+        host.removeAttribute("hidden");
         host.innerHTML = svgDual(rebase(pts), rebase(gts),
                                  "BSE 500 earnings", "BSE 500 index");
       }
@@ -578,103 +589,156 @@
      scaled so the latest point equals the index's actual EPS today.
      ================================================================== */
 
-  function drawIndexChart(monthlyRows, epsPoints, epsNow) {
+  function monthEndISO(y, m) {          /* m is 1-12 */
+    var d = new Date(Date.UTC(y, m, 0));
+    return d.toISOString().slice(0, 10);
+  }
+
+  /* the index and its own earnings, on two locked axes ------------------- */
+  function drawIndexChart(own) {
     var el = document.getElementById("cx-lwc");
-    if (!el || !window.LightweightCharts || !monthlyRows || !monthlyRows.length) return false;
+    if (!el || !window.LightweightCharts || !own || !own.rows || own.rows.length < 24) return false;
+    var LC = window.LightweightCharts;
 
-    /* Both series are rebased to 100 at the left edge of whatever you are
-       looking at, and re-based again whenever you zoom or pan — otherwise a
-       line at 36,000 and a line at 1,600 share an axis and the comparison
-       says nothing. This is how a compare view is meant to behave. */
+    var priceRaw = [], epsRaw = [];
+    own.rows.forEach(function (r) {
+      if (typeof r[1] === "number") priceRaw.push({ time: r[0], value: r[1] });
+      if (typeof r[2] === "number") epsRaw.push({ time: r[0], value: r[2] });
+    });
+    if (priceRaw.length < 24 || epsRaw.length < 24) return false;
 
-    var priceRaw = monthlyRows.map(function (r) { return { time: r[0], value: r[1] }; });
-    var epsRaw = (epsPoints || []).slice();
+    var RATIO = 20;   /* the two axes are locked twenty to one, so the lines
+                         touch exactly where the index is on twenty times
+                         earnings and the gap between them is the rating */
 
-    /* the comparison can only start where both series exist */
-    var commonStart = epsRaw.length ? epsRaw[0].time : priceRaw[0].time;
+    /* ---- the current financial year, carried forward as a dotted line ----
+       Earnings are actual up to the last reported quarter. The rest of this
+       financial year is continued at the pace earnings have actually grown
+       over the past twelve months. It is an extrapolation, not a forecast,
+       and it is drawn dotted so it never reads as fact. */
+    var last  = epsRaw[epsRaw.length - 1];
+    var lastD = new Date(last.time + "T00:00:00Z");
+    var yrAgo = null;
+    for (var i = epsRaw.length - 1; i >= 0; i--) {
+      if ((lastD - new Date(epsRaw[i].time + "T00:00:00Z")) / 86400000 >= 360) {
+        yrAgo = epsRaw[i]; break;
+      }
+    }
+    var g = (yrAgo && yrAgo.value > 0) ? Math.pow(last.value / yrAgo.value, 1 / 12) : 1;
+    if (!isFinite(g) || g <= 0) g = 1;
 
-    var chart = LightweightCharts.createChart(el, {
+    var fyEnd = lastD.getUTCMonth() >= 3 ? lastD.getUTCFullYear() + 1 : lastD.getUTCFullYear();
+    var proj = [{ time: last.time, value: last.value }];
+    var cur = last.value, py = lastD.getUTCFullYear(), pm = lastD.getUTCMonth() + 1, guard = 0;
+    while (!(py === fyEnd && pm === 3) && guard++ < 24) {
+      pm += 1; if (pm > 12) { pm = 1; py += 1; }
+      cur *= g;
+      proj.push({ time: monthEndISO(py, pm), value: +cur.toFixed(2) });
+    }
+
+    /* ---- one price range, shared, so the ratio can never drift ---------- */
+    var lo = Infinity, hi = -Infinity;
+    priceRaw.forEach(function (d) {
+      if (d.value < lo) lo = d.value;
+      if (d.value > hi) hi = d.value;
+    });
+    epsRaw.concat(proj).forEach(function (d) {
+      var v = d.value * RATIO;
+      if (v < lo) lo = v;
+      if (v > hi) hi = v;
+    });
+    lo /= 1.10; hi *= 1.00;
+    var leftInfo  = { priceRange: { minValue: lo, maxValue: hi } };
+    var rightInfo = { priceRange: { minValue: lo / RATIO, maxValue: hi / RATIO } };
+
+    var num = function (v) { return Math.round(v).toLocaleString("en-IN"); };
+    var eps2 = function (v) { return v >= 100 ? num(v) : v.toFixed(1); };
+
+    var chart = LC.createChart(el, {
       layout: { background: { color: "#FAF8F5" }, textColor: "#74604B", fontSize: 11,
                 fontFamily: "Inter, system-ui, sans-serif", attributionLogo: false },
       grid: { vertLines: { color: "rgba(228,223,214,0.7)" },
               horzLines: { color: "rgba(228,223,214,0.7)" } },
-      rightPriceScale: { borderColor: "#E4DFD6", scaleMargins: { top: 0.12, bottom: 0.1 } },
-      timeScale: { borderColor: "#E4DFD6", rightOffset: 3, fixLeftEdge: true, fixRightEdge: true },
+      leftPriceScale:  { visible: true, mode: 1, borderColor: "#E4DFD6",
+                         scaleMargins: { top: 0.16, bottom: 0.06 } },
+      rightPriceScale: { visible: true, mode: 1, borderColor: "#E4DFD6",
+                         scaleMargins: { top: 0.16, bottom: 0.06 } },
+      timeScale: { borderColor: "#E4DFD6", rightOffset: 4, fixLeftEdge: true,
+                   fixRightEdge: true, minBarSpacing: 0.02 },
       crosshair: { mode: 0, vertLine: { color: "#B9AF9F", labelBackgroundColor: "#74604B" },
                    horzLine: { color: "#B9AF9F", labelBackgroundColor: "#74604B" } },
-      localization: {
-        priceFormatter: function (v) { return (v >= 0 ? "+" : "") + (v - 100).toFixed(0) + "%"; }
-      },
-      handleScale: true, handleScroll: true, autoSize: true
+      handleScale: { axisPressedMouseMove: { time: true, price: false }, pinch: true,
+                     mouseWheel: true },
+      handleScroll: true, autoSize: true
     });
 
-    var opts = { priceLineVisible: false, lastValueVisible: true, lineWidth: 2,
-                 priceFormat: { type: "custom", formatter: function (v) {
-                   return (v >= 100 ? "+" : "") + (v - 100).toFixed(1) + "%"; } } };
+    var priceS = chart.addLineSeries({
+      priceScaleId: "left", color: "#74604B", lineWidth: 2, priceLineVisible: false,
+      crosshairMarkerRadius: 3,
+      priceFormat: { type: "custom", minMove: 1, formatter: num },
+      autoscaleInfoProvider: function () { return leftInfo; }
+    });
+    var epsS = chart.addLineSeries({
+      priceScaleId: "right", color: "#E0402B", lineWidth: 2, priceLineVisible: false,
+      crosshairMarkerRadius: 3,
+      priceFormat: { type: "custom", minMove: 0.1, formatter: eps2 },
+      autoscaleInfoProvider: function () { return rightInfo; }
+    });
+    var projS = chart.addLineSeries({
+      priceScaleId: "right", color: "#E0402B", lineWidth: 2, lineStyle: 1,
+      priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
+      priceFormat: { type: "custom", minMove: 0.1, formatter: eps2 },
+      autoscaleInfoProvider: function () { return rightInfo; }
+    });
 
-    var priceS = chart.addLineSeries(Object.assign({ color: "#74604B", title: "Index" }, opts));
-    var epsS   = chart.addLineSeries(Object.assign({ color: "#E0402B", title: "Earnings" }, opts));
-
-    function valueAt(rows, t) {
-      var best = null;
-      for (var i = 0; i < rows.length; i++) {
-        if (rows[i].time <= t) best = rows[i]; else break;
-      }
-      return best ? best.value : (rows.length ? rows[0].value : null);
-    }
-
-    function rebaseTo(t) {
-      var base = t < commonStart ? commonStart : t;
-      var pb = valueAt(priceRaw, base), eb = epsRaw.length ? valueAt(epsRaw, base) : null;
-      if (!pb) return;
-      priceS.setData(priceRaw.map(function (d) {
-        return { time: d.time, value: +((d.value / pb) * 100).toFixed(2) };
-      }));
-      if (eb) {
-        epsS.setData(epsRaw.map(function (d) {
-          return { time: d.time, value: +((d.value / eb) * 100).toFixed(2) };
-        }));
-      }
-    }
-
-    rebaseTo(commonStart);
+    priceS.setData(priceRaw);
+    epsS.setData(epsRaw);
+    if (proj.length > 1) projS.setData(proj);
     chart.timeScale().fitContent();
 
-    /* re-anchor to the new left edge after a zoom or a pan */
-    var lastBase = null, busy = false;
-    chart.timeScale().subscribeVisibleTimeRangeChange(function (range) {
-      if (!range || busy) return;
-      var from = range.from;
-      if (typeof from === "object") {
-        from = from.year + "-" + String(from.month).padStart(2, "0") + "-" +
-               String(from.day).padStart(2, "0");
-      } else if (typeof from === "number") {
-        from = new Date(from * 1000).toISOString().slice(0, 10);
-      }
-      if (from === lastBase) return;
-      lastBase = from;
-      busy = true;
-      rebaseTo(from);
-      setTimeout(function () { busy = false; }, 0);
-    });
-
+    /* ---- the line of type under the chart ------------------------------ */
     var read = document.getElementById("cx-lwc-read");
     if (read) {
-      var pct = function (v) {
-        return v == null ? "—" : (v >= 100 ? "+" : "") + (v - 100).toFixed(1) + "%";
-      };
+      var lastP = priceRaw[priceRaw.length - 1];
       var base = function () {
-        read.innerHTML = "Both lines start at zero on the left edge. " +
-                         "Latest index EPS <b>&#8377;" +
-                         (epsNow ? Math.round(epsNow).toLocaleString("en-IN") : "—") + "</b>.";
+        var pe = last.value > 0 ? lastP.value / last.value : null;
+        read.innerHTML = "Latest &nbsp;index <b>" + num(lastP.value) + "</b> &nbsp;·&nbsp; EPS <b>&#8377;" +
+                         eps2(last.value) + "</b> &nbsp;·&nbsp; P/E <b>" +
+                         (pe ? pe.toFixed(1) + "×" : "—") + "</b>";
       };
       base();
       chart.subscribeCrosshairMove(function (p) {
         if (!p || !p.time || !p.seriesData) { base(); return; }
-        var a = p.seriesData.get(priceS), b = p.seriesData.get(epsS);
-        read.innerHTML = "Index <b>" + pct(a && a.value) + "</b> &nbsp;·&nbsp; earnings <b>" +
-                         pct(b && b.value) + "</b> since the left edge";
+        var a = p.seriesData.get(priceS),
+            b = p.seriesData.get(epsS) || p.seriesData.get(projS);
+        if (!a && !b) { base(); return; }
+        var pe = (a && b && b.value > 0) ? a.value / b.value : null;
+        read.innerHTML = "Index <b>" + (a ? num(a.value) : "—") +
+                         "</b> &nbsp;·&nbsp; EPS <b>&#8377;" + (b ? eps2(b.value) : "—") +
+                         "</b> &nbsp;·&nbsp; P/E <b>" + (pe ? pe.toFixed(1) + "×" : "—") + "</b>";
       });
+    }
+
+    /* the facts panel, filled from our own record straight away — the
+       constituent pull below refreshes them a moment later */
+    (function () {
+      var lastP = priceRaw[priceRaw.length - 1];
+      var put = function (id, txt) {
+        var e = document.getElementById(id);
+        if (e && (!e.textContent || e.textContent.trim() === "\u2014")) e.textContent = txt;
+      };
+      put("cx-n500lvl", num(lastP.value));
+      put("cx-n500eps", "\u20B9" + num(last.value));
+      if (last.value > 0) put("cx-n500pe", (lastP.value / last.value).toFixed(1) + "\u00D7");
+    }());
+
+    var fromEl = document.getElementById("cx-gdpeps-from");
+    if (fromEl) {
+      var f = function (iso) {
+        var d = new Date(iso + "T00:00:00Z");
+        return d.toLocaleDateString("en-IN", { month: "short", year: "numeric", timeZone: "UTC" });
+      };
+      fromEl.textContent = f(priceRaw[0].time) + " to " + f(last.time);
     }
     return true;
   }
