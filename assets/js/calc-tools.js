@@ -162,7 +162,8 @@
     var run = drawDown(corpus, draw, years, rate, step);
     var safe = safeDraw(corpus, years, rate, step);
 
-    set("w-lasts", run.survives ? "Past " + years + " years" : spell(run.months));
+    set("w-lasts", run.survives ? "Intact after " + years + " years"
+                                : "Runs out after " + spell(run.months));
     set("w-left", run.survives ? rupees(run.left) : "Nothing");
     set("w-total", rupees(run.taken));
     set("w-final", rupees(run.last) + " a month");
@@ -174,9 +175,9 @@
 
     verdict("w-verdict", run.survives,
       run.survives
-        ? "<strong>The corpus holds.</strong> Drawing " + shortRupees(draw) +
-          " a month" + (step > 0 ? ", rising " + step + "% a year," : ",") +
-          " leaves about " + shortRupees(run.left) + " after " + years + " years."
+        ? "<strong>The corpus holds.</strong> Drawing " + shortRupees(draw) + " a month" +
+          (step > 0 ? ", rising " + step + "% a year, leaves " : " leaves ") +
+          "about " + shortRupees(run.left) + " after " + years + " years."
         : "<strong>It runs out after " + spell(run.months) + ".</strong> " +
           "To make it through " + years + " years on these assumptions the withdrawal has to " +
           "start at about " + shortRupees(safe) + " a month instead of " +
