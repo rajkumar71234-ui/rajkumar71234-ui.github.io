@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20260829m">
+<link rel="stylesheet" href="assets/css/style.css?v=20260902a">
 </head>
 <body>
 
@@ -82,17 +82,19 @@
 
       <div class="sec-head sec-head--sub reveal">
         <h3 class="h3">Price and earnings on one chart.</h3>
-        <p>Both lines start at zero on the left edge of whatever you are looking at, and
-           re-anchor whenever you zoom or pan &mdash; so the gap between them is always the
-           re-rating over the period on screen. The earnings line is the combined net profit of
-           all 500 companies, expressed per index point. Drag to pan, scroll to zoom, hover to
-           read both. Earnings run from <span id="cx-gdpeps-from">&mdash;</span>.</p>
+        <p>The BSE&nbsp;500 against its own earnings. Two axes &mdash; the index on the left,
+           earnings per index point on the right &mdash; both logarithmic and locked twenty to
+           one, so the lines touch exactly where the index is on twenty times earnings. When
+           price sits above earnings the market is paying more than twenty; when it sits below,
+           less. Earnings are actual to the last reported quarter and dotted through the rest of
+           this financial year. Drag to pan, scroll to zoom, hover to read the level, the
+           earnings and the multiple. <span id="cx-gdpeps-from">&mdash;</span>.</p>
       </div>
 
       <div class="gdp gdp--wide reveal">
         <div class="gdp__head gdp__head--legend">
-          <span class="lg lg--b">BSE 500 index</span>
-          <span class="lg lg--a">Combined earnings</span>
+          <span class="lg lg--b">BSE 500 index &middot; left axis</span>
+          <span class="lg lg--a">Earnings per index point &middot; right axis</span>
           <span class="lwc-read" id="cx-lwc-read"></span>
         </div>
         <div class="lwc" id="cx-lwc"></div>
@@ -105,14 +107,16 @@
           <div class="fact"><span class="fact__k">Combined profit, latest FY</span><b id="cx-n500profit">&mdash;</b></div>
           <div class="fact"><span class="fact__k">Which has run further</span><b id="cx-gdpshare">&mdash;</b></div>
         </div>
-        <span class="macro__src">P/E is the whole index&rsquo;s market value divided by its
-          companies&rsquo; combined trailing profit; EPS is the index level divided by that P/E.
-          The 500 names are today&rsquo;s constituents, so earlier years describe the companies in
-          the index now, not the index as it stood then. The chart is the BSE&rsquo;s index rather
-          than the Nifty&nbsp;500 because NSE does not licence its prices for embedding; the two
-          track each other closely. The earnings line is our own calculation from company
-          filings &mdash; no data provider publishes an earnings series for an index &mdash; and
-          it begins in FY16, the first year almost every current constituent had reported.</span>
+        <span class="macro__src">The chart is drawn from our own month-end record of the
+          BSE&nbsp;500 &mdash; index level and trailing twelve-month earnings per index point,
+          kept since 1999. No data vendor publishes an earnings series for an index, so this is
+          our own work rather than a licensed feed. The dotted section carries the last actual
+          earnings figure forward to the end of the financial year at the rate earnings have
+          grown over the past twelve months; it is an extrapolation, not a forecast, and nothing
+          should be read into it. The index is the BSE&rsquo;s rather than the Nifty&nbsp;500
+          because NSE does not licence its prices for embedding; the two track each other
+          closely. The figures below come separately from the current 500 constituents&rsquo;
+          own filings, so earlier years there describe the companies in the index now.</span>
       </div>
 
     </div>
@@ -308,8 +312,8 @@
 </main>
 
 
-<script src="assets/js/main.js?v=20260829m"></script>
+<script src="assets/js/main.js?v=20260902a"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/market.js?v=20260829m"></script>
+<script src="assets/js/market.js?v=20260902a"></script>
 </body>
 </html>
