@@ -2453,6 +2453,13 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .cx { width: 100%; height: 100%; display: block; }
 .cx-ax { font-size: 9px; fill: #8B8378; font-family: inherit; letter-spacing: 0.04em; }
+.cx-val {
+  font-size: 11px;
+  fill: var(--ink);
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
 .cx-none { font-size: 0.82rem; color: var(--muted); }
 
 .macros {
