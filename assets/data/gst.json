@@ -1,0 +1,7 @@
+{
+ "title": "India — gross GST collections by financial year",
+ "unit": "rupees lakh crore",
+ "source": "Ministry of Finance / PIB annual GST releases",
+ "note": "FY26 is the ministry's own full-year total of 22,27,096 crore. On the like-for-like basis the ministry published with it, which leaves compensation cess out of both years, FY26 rose 8.3% over FY25.",
+ "rows": [["FY22", 14.83], ["FY23", 18.08], ["FY24", 20.18], ["FY25", 22.08], ["FY26", 22.27]]
+}
