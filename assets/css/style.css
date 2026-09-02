@@ -2658,3 +2658,109 @@ ul { margin: 0; padding: 0; list-style: none; }
   .lwc { height: 354px; }
   .lwc-read { margin-left: 0; width: 100%; }
 }
+
+/* ------------------------------------------------ two rules, on the calculator */
+.rules {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  margin-top: 30px;
+  align-items: start;
+}
+.rule {
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  padding: 24px 22px 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.rule__k {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.rule__lead {
+  margin: 12px 0 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink);
+  max-width: 46ch;
+}
+.rule__src {
+  display: block;
+  margin-top: auto;
+  padding-top: 16px;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.r72 {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 22px;
+  border-top: 1px solid var(--line);
+}
+.r72 li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+.r72 b {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.01em;
+}
+.r72 span { font-size: 0.88rem; color: var(--brown); }
+
+.infwrap { margin-top: 20px; overflow-x: auto; }
+.inftab {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.inftab th,
+.inftab td {
+  padding: 11px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.inftab thead th {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+.inftab thead th:first-child,
+.inftab tbody th { text-align: left; }
+.inftab tbody th {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: 1rem;
+}
+.inftab tbody td { font-size: 1rem; color: var(--ink); }
+.inftab tbody tr:last-child th,
+.inftab tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 860px) {
+  .rules { grid-template-columns: 1fr; }
+}
+@media (max-width: 460px) {
+  .r72 { grid-template-columns: 1fr; }
+}
