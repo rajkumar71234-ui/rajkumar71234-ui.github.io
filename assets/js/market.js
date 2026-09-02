@@ -237,6 +237,45 @@
       "</svg>";
   }
 
+
+  /* Five values read better as bars than as a line — one column a year. */
+  function svgBars(points, colour, opts) {
+    opts = opts || {};
+    if (!points || !points.length) return "";
+    var W = 620, H = 230, PL = 10, PR = 10, PT = 26, PB = 26;
+    var vals = points.map(function (p) { return p.v; });
+    var hi = Math.max.apply(null, vals), lo = Math.min.apply(null, vals);
+    if (lo > 0) lo = 0;
+    if (hi < 0) hi = 0;
+    if (hi === lo) hi = lo + 1;
+    var span = hi - lo, top = hi + span * 0.16, bot = lo - (lo < 0 ? span * 0.1 : 0);
+    var y = function (v) { return PT + (H - PT - PB) * (1 - (v - bot) / (top - bot)); };
+    var slot = (W - PL - PR) / points.length, bw = Math.min(64, slot * 0.56);
+
+    var out = "";
+    var zero = y(0);
+    out += '<line x1="' + PL + '" y1="' + zero.toFixed(1) + '" x2="' + (W - PR) +
+           '" y2="' + zero.toFixed(1) + '" stroke="#C9C2B6" stroke-width="1"/>';
+    points.forEach(function (p, i) {
+      var cx = PL + slot * i + slot / 2, ytop = y(Math.max(p.v, 0)), ybot = y(Math.min(p.v, 0));
+      out += '<rect x="' + (cx - bw / 2).toFixed(1) + '" y="' + ytop.toFixed(1) +
+             '" width="' + bw.toFixed(1) + '" height="' + Math.max(1, ybot - ytop).toFixed(1) +
+             '" fill="' + colour + '" fill-opacity="' + (i === points.length - 1 ? "1" : "0.55") + '"/>' +
+             '<text x="' + cx.toFixed(1) + '" y="' + (ytop - 7).toFixed(1) +
+             '" text-anchor="middle" class="cx-val">' + (opts.fmt ? opts.fmt(p.v) : p.v.toFixed(1)) + "</text>" +
+             '<text x="' + cx.toFixed(1) + '" y="' + (H - 7) +
+             '" text-anchor="middle" class="cx-ax">' + p.t + "</text>";
+    });
+    return '<svg class="cx" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" role="img" aria-label="' +
+           (opts.label || "five years") + '">' + out + "</svg>";
+  }
+
+  function paintBars(el, points, colour, opts) {
+    if (!el) return;
+    var svg = svgBars(points, colour, opts);
+    el.innerHTML = svg || '<span class="cx-none">Not available.</span>';
+  }
+
   function paint(el, points, colour, opts) {
     if (!el) return;
     var svg = svgChart(points, colour, opts);
@@ -303,20 +342,33 @@
   }
 
   if (chartEl("cx-ingdp")) {
-    worldBank("IND", "NY.GDP.MKTP.KD.ZG", 45).then(function (p) {
-      paint(chartEl("cx-ingdp"), p, ACCENT, { label: "India real GDP growth", zero: true, tall: true });
+    /* the last five years, one bar a year */
+    worldBank("IND", "NY.GDP.MKTP.KD.ZG", 5).then(function (p) {
+      paintBars(chartEl("cx-ingdp"), p, ACCENT, {
+        label: "India real GDP growth, last five years",
+        fmt: function (v) { return v.toFixed(1) + "%"; }
+      });
       var l = document.getElementById("cx-ingdp-now");
       if (l && p.length) l.textContent = p[p.length - 1].v.toFixed(2) + "%";
       var d = document.getElementById("cx-ingdp-year");
       if (d && p.length) d.textContent = p[p.length - 1].t;
     }).catch(function () {});
-    worldBank("USA", "NY.GDP.MKTP.KD.ZG", 45).then(function (p) {
-      paint(chartEl("cx-usgdp"), p, BROWN, { label: "US real GDP growth", zero: true, tall: true });
-      var l = document.getElementById("cx-usgdp-now");
-      if (l && p.length) l.textContent = p[p.length - 1].v.toFixed(2) + "%";
-      var d = document.getElementById("cx-usgdp-year");
-      if (d && p.length) d.textContent = p[p.length - 1].t;
-    }).catch(function () {});
+
+    /* gross GST collections, financial year by financial year */
+    fetch("assets/data/gst.json", { cache: "no-cache" })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (!j || !j.rows) return;
+        var pts = j.rows.map(function (r) { return { t: r[0], v: r[1] }; });
+        paintBars(chartEl("cx-ingst"), pts, BROWN, {
+          label: "India gross GST collections",
+          fmt: function (v) { return v.toFixed(2); }
+        });
+        var l = document.getElementById("cx-ingst-now");
+        if (l) l.textContent = "\u20B9" + pts[pts.length - 1].v.toFixed(2) + " lakh cr";
+        var d = document.getElementById("cx-ingst-year");
+        if (d) d.textContent = pts[pts.length - 1].t;
+      }).catch(function () {});
   }
 
 
