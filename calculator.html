@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20260902l">
+<link rel="stylesheet" href="assets/css/style.css?v=20260902m">
 </head>
 <body>
 
@@ -142,45 +142,30 @@
   <!-- ============================================================= lumpsum -->
   <section class="section cpanel" id="panel-lumpsum">
     <div class="shell">
-      <h2 class="h3 calc__title">Lumpsum</h2>
       <div class="calc">
-        <form class="calc__form form" id="lump-form" novalidate>
-          <fieldset class="fset">
-            <legend class="fset__legend">One amount, left alone</legend>
-            <div class="field--row">
-              <div class="field">
-                <label for="l-amount">Investment amount (&#8377;)</label>
-                <input type="number" id="l-amount" min="0" step="10000" value="500000">
-              </div>
-              <div class="field">
-                <label for="l-years">Investment duration (years)</label>
-                <input type="number" id="l-years" min="1" max="50" value="10">
-              </div>
-            </div>
-            <div class="field--row">
-              <div class="field">
-                <label for="l-rate">Expected annual return (%)</label>
-                <input type="number" id="l-rate" min="0" max="30" step="0.5" value="12">
-              </div>
-              <div class="field">
-                <label for="l-infl">Inflation (% a year)</label>
-                <input type="number" id="l-infl" min="0" max="15" step="0.5" value="6">
-                <p class="field__hint">Used only to show what the end figure is worth in
-                   today&rsquo;s money.</p>
-              </div>
-            </div>
-          </fieldset>
+        <form class="calc__form form calc__form--stack" id="lump-form" novalidate>
+          <h2 class="h3 calc__title">Lumpsum Calculator</h2>
+          <div class="field">
+            <label for="l-amount">Investment amount (&#8377;)</label>
+            <input type="number" id="l-amount" min="0" step="10000" value="500000">
+          </div>
+          <div class="field">
+            <label for="l-rate">Expected annual return (%)</label>
+            <input type="number" id="l-rate" min="0" max="30" step="0.5" value="12">
+          </div>
+          <div class="field">
+            <label for="l-years">Investment duration (years)</label>
+            <input type="number" id="l-years" min="1" max="50" value="10">
+          </div>
+          <button class="btn btn--brown" type="submit">Calculate</button>
         </form>
 
         <aside class="calc__out">
           <span class="calc__eyebrow">Lumpsum projection</span>
-          <p class="calc__verdict" id="l-verdict"></p>
-          <dl class="calc__stats">
-            <div class="calc__stat"><dt>Amount invested</dt><dd id="l-invested">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Estimated returns</dt><dd id="l-growth">&mdash;</dd></div>
-            <div class="calc__stat calc__stat--lead"><dt>Future value</dt><dd id="l-value">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Worth in today&rsquo;s money</dt><dd id="l-real">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Times your money</dt><dd id="l-mult">&mdash;</dd></div>
+          <dl class="proj">
+            <div class="proj__row"><dt>Amount invested</dt><dd id="l-invested">&mdash;</dd></div>
+            <div class="proj__row"><dt>Estimated returns</dt><dd id="l-growth">&mdash;</dd></div>
+            <div class="proj__row proj__row--lead"><dt>Future value</dt><dd id="l-value">&mdash;</dd></div>
           </dl>
         </aside>
       </div>
@@ -190,45 +175,34 @@
   <!-- ============================================================= step-up -->
   <section class="section cpanel" id="panel-stepup" hidden>
     <div class="shell">
-      <h2 class="h3 calc__title">SIP with an annual step-up</h2>
       <div class="calc">
-        <form class="calc__form form" id="step-form" novalidate>
-          <fieldset class="fset">
-            <legend class="fset__legend">Every month, rising every year</legend>
-            <div class="field--row">
-              <div class="field">
-                <label for="s-sip">Starting monthly SIP (&#8377;)</label>
-                <input type="number" id="s-sip" min="0" step="500" value="10000">
-              </div>
-              <div class="field">
-                <label for="s-step">Annual step-up (%)</label>
-                <input type="number" id="s-step" min="0" max="50" step="1" value="10">
-                <p class="field__hint">Raise the SIP once a year as your income rises. Set it
-                   to zero for a flat SIP.</p>
-              </div>
-            </div>
-            <div class="field--row">
-              <div class="field">
-                <label for="s-rate">Expected annual return (%)</label>
-                <input type="number" id="s-rate" min="0" max="30" step="0.5" value="12">
-              </div>
-              <div class="field">
-                <label for="s-years">Duration (years)</label>
-                <input type="number" id="s-years" min="1" max="50" value="15">
-              </div>
-            </div>
-          </fieldset>
+        <form class="calc__form form calc__form--stack" id="step-form" novalidate>
+          <h2 class="h3 calc__title">SIP with Annual Step-Up</h2>
+          <div class="field">
+            <label for="s-sip">Starting monthly SIP (&#8377;)</label>
+            <input type="number" id="s-sip" min="0" step="500" value="10000">
+          </div>
+          <div class="field">
+            <label for="s-step">Annual step-up (%)</label>
+            <input type="number" id="s-step" min="0" max="50" step="1" value="10">
+          </div>
+          <div class="field">
+            <label for="s-rate">Expected annual return (%)</label>
+            <input type="number" id="s-rate" min="0" max="30" step="0.5" value="12">
+          </div>
+          <div class="field">
+            <label for="s-years">Duration (years)</label>
+            <input type="number" id="s-years" min="1" max="50" value="15">
+          </div>
+          <button class="btn btn--brown" type="submit">Calculate</button>
         </form>
 
         <aside class="calc__out">
           <span class="calc__eyebrow">Step-up SIP projection</span>
-          <p class="calc__verdict" id="s-verdict"></p>
-          <dl class="calc__stats">
-            <div class="calc__stat"><dt>Total invested</dt><dd id="s-invested">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Estimated returns</dt><dd id="s-growth">&mdash;</dd></div>
-            <div class="calc__stat calc__stat--lead"><dt>Total corpus</dt><dd id="s-value">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Last year&rsquo;s monthly SIP</dt><dd id="s-last">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Without the step-up</dt><dd id="s-flat">&mdash;</dd></div>
+          <dl class="proj">
+            <div class="proj__row"><dt>Total invested</dt><dd id="s-invested">&mdash;</dd></div>
+            <div class="proj__row"><dt>Estimated returns</dt><dd id="s-growth">&mdash;</dd></div>
+            <div class="proj__row proj__row--lead"><dt>Total corpus</dt><dd id="s-value">&mdash;</dd></div>
           </dl>
         </aside>
       </div>
@@ -238,53 +212,38 @@
   <!-- ================================================================= swp -->
   <section class="section cpanel" id="panel-swp" hidden>
     <div class="shell">
-      <h2 class="h3 calc__title">SWP, with an annual step-up</h2>
       <div class="calc">
-        <form class="calc__form form" id="swp-form" novalidate>
-          <fieldset class="fset">
-            <legend class="fset__legend">Drawing an income out</legend>
-            <div class="field--row">
-              <div class="field">
-                <label for="w-corpus">Invested corpus (&#8377;)</label>
-                <input type="number" id="w-corpus" min="0" step="100000" value="5000000">
-              </div>
-              <div class="field">
-                <label for="w-draw">Monthly withdrawal (&#8377;)</label>
-                <input type="number" id="w-draw" min="0" step="1000" value="30000">
-              </div>
-            </div>
-            <div class="field--row">
-              <div class="field">
-                <label for="w-step">Annual step-up in the withdrawal (%)</label>
-                <input type="number" id="w-step" min="0" max="15" step="0.5" value="0">
-                <p class="field__hint">Zero draws the same amount every month for good. Set it
-                   to inflation and the income keeps its buying power &mdash; which is a very
-                   different question, and usually the real one.</p>
-              </div>
-              <div class="field">
-                <label for="w-rate">Expected annual return (%)</label>
-                <input type="number" id="w-rate" min="0" max="20" step="0.5" value="10">
-              </div>
-            </div>
-            <div class="field--row">
-              <div class="field">
-                <label for="w-years">Withdrawal duration (years)</label>
-                <input type="number" id="w-years" min="1" max="60" value="20">
-              </div>
-            </div>
-          </fieldset>
+        <form class="calc__form form calc__form--stack" id="swp-form" novalidate>
+          <h2 class="h3 calc__title">SWP Calculator</h2>
+          <div class="field">
+            <label for="w-corpus">Invested corpus (&#8377;)</label>
+            <input type="number" id="w-corpus" min="0" step="100000" value="5000000">
+          </div>
+          <div class="field">
+            <label for="w-draw">Monthly withdrawal (&#8377;)</label>
+            <input type="number" id="w-draw" min="0" step="1000" value="30000">
+          </div>
+          <div class="field">
+            <label for="w-step">Annual step-up in the withdrawal (%)</label>
+            <input type="number" id="w-step" min="0" max="15" step="0.5" value="0">
+          </div>
+          <div class="field">
+            <label for="w-rate">Expected annual return (%)</label>
+            <input type="number" id="w-rate" min="0" max="20" step="0.5" value="10">
+          </div>
+          <div class="field">
+            <label for="w-years">Withdrawal duration (years)</label>
+            <input type="number" id="w-years" min="1" max="60" value="20">
+          </div>
+          <button class="btn btn--brown" type="submit">Calculate</button>
         </form>
 
         <aside class="calc__out">
           <span class="calc__eyebrow">SWP projection</span>
-          <p class="calc__verdict" id="w-verdict"></p>
-          <dl class="calc__stats">
-            <div class="calc__stat"><dt>Total withdrawn</dt><dd id="w-total">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Corpus status</dt><dd id="w-lasts">&mdash;</dd></div>
-            <div class="calc__stat calc__stat--lead"><dt>Remaining corpus</dt><dd id="w-left">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Withdrawal in the final year</dt><dd id="w-final">&mdash;</dd></div>
-            <div class="calc__stat"><dt>Amount that would last the full term</dt><dd id="w-safe">&mdash;</dd></div>
-            <div class="calc__stat"><dt>First year&rsquo;s draw on the corpus</dt><dd id="w-rateout">&mdash;</dd></div>
+          <dl class="proj">
+            <div class="proj__row"><dt>Total withdrawn</dt><dd id="w-total">&mdash;</dd></div>
+            <div class="proj__row proj__row--lead"><dt>Remaining corpus</dt><dd id="w-left">&mdash;</dd></div>
+            <div class="proj__row"><dt>Corpus status</dt><dd id="w-lasts">&mdash;</dd></div>
           </dl>
         </aside>
       </div>
@@ -294,7 +253,7 @@
 </main>
 
 
-<script src="assets/js/main.js?v=20260902l"></script>
-<script src="assets/js/calc-tools.js?v=20260902l"></script>
+<script src="assets/js/main.js?v=20260902m"></script>
+<script src="assets/js/calc-tools.js?v=20260902m"></script>
 </body>
 </html>
