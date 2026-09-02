@@ -145,11 +145,12 @@
      earnings per index point, back to 1999. It is the only place a real
      earnings history for the index exists, so the chart is drawn from it
      rather than from anything a data vendor will licence. */
-  var CHART_DREW = false;
+  var CHART_DREW = false, OWN = null;
   fetch("assets/data/bse500.json", { cache: "no-cache" })
     .then(function (r) { return r.ok ? r.json() : null; })
     .then(function (j) {
       if (!j) return;
+      OWN = j;
       var go = function () { CHART_DREW = drawIndexChart(j); };
       if (window.LightweightCharts) go();
       else window.addEventListener("load", go);
@@ -401,17 +402,22 @@
       /* live valuation of the whole index, from its own constituents */
       var pe = nittm > 0 ? mcap / nittm : null;
       var set = function (id, txt) { var e = document.getElementById(id); if (e) e.textContent = txt; };
-      if (pe) {
-        set("cx-n500pe", pe.toFixed(1) + "×");
-        set("cx-n500eps", (100 / pe).toFixed(2) + "%");
-      }
       if (mcap > 0) {
         set("cx-n500mcap", "₹" + (mcap / 1e7 / 1e5).toFixed(2) + " lakh cr");
       }
       var lvlNow = (((OFFICIAL || {}).indices || {}).bse500 || {}).level;
-      if (lvlNow) {
-        set("cx-n500lvl", Math.round(lvlNow).toLocaleString("en-IN"));
-        if (pe) set("cx-n500eps", "₹" + Math.round(lvlNow / pe).toLocaleString("en-IN"));
+      if (lvlNow) set("cx-n500lvl", Math.round(lvlNow).toLocaleString("en-IN"));
+
+      /* earnings per index point come from our own series — the same figure
+         the chart draws — so the panel and the chart never disagree */
+      var ownEps = (OWN && OWN.rows && OWN.rows.length)
+        ? OWN.rows[OWN.rows.length - 1][2] : null;
+      if (ownEps) {
+        set("cx-n500eps", "₹" + Math.round(ownEps).toLocaleString("en-IN"));
+        var lv = lvlNow || OWN.rows[OWN.rows.length - 1][1];
+        set("cx-n500pe", (lv / ownEps).toFixed(1) + "×");
+      } else if (pe) {
+        set("cx-n500pe", pe.toFixed(1) + "×");
       }
       var prEl = document.getElementById("cx-n500profit");
       var gdEl = document.getElementById("cx-gdpshare");
