@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20260902g">
+<link rel="stylesheet" href="assets/css/style.css?v=20260902h">
 </head>
 <body>
 
@@ -130,6 +130,41 @@
         <h2 class="h2 balance">Where the earnings come from.</h2>
       </div>
 
+      <div class="gdps reveal">
+        <div class="gdp">
+          <div class="gdp__head">
+            <span class="gdp__k">India &mdash; real GDP growth</span>
+            <b class="gdp__v" id="cx-ingdp-now">&mdash;</b>
+            <span class="gdp__yr">in <span id="cx-ingdp-year">&mdash;</span></span>
+          </div>
+          <div class="macro__chart macro__chart--tall" id="cx-ingdp"></div>
+          <span class="macro__src">Real growth, last ten years, World Bank.</span>
+        </div>
+        <div class="gdp">
+          <div class="gdp__head">
+            <span class="gdp__k">India &mdash; gross GST collected</span>
+            <b class="gdp__v" id="cx-ingst-now">&mdash;</b>
+            <span class="gdp__yr">in <span id="cx-ingst-year">&mdash;</span></span>
+          </div>
+          <div class="macro__chart macro__chart--tall" id="cx-ingst"></div>
+          <span class="macro__src">Rupees lakh crore, by financial year, from the Ministry of
+            Finance&rsquo;s own releases. FY26 is the ministry&rsquo;s full-year total of
+            &#8377;22,27,096 crore; on the like-for-like basis it published alongside, which
+            leaves compensation cess out of both years, the year rose 8.3%.</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================================================== money and prices -->
+  <section class="section">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Money and prices</span>
+        <h2 class="h2 balance">What money costs, and what it buys.</h2>
+      </div>
+
       <div class="macros reveal">
 
         <div class="macro">
@@ -166,30 +201,6 @@
 
       </div>
 
-      <div class="gdps reveal">
-        <div class="gdp">
-          <div class="gdp__head">
-            <span class="gdp__k">India &mdash; real GDP growth</span>
-            <b class="gdp__v" id="cx-ingdp-now">&mdash;</b>
-            <span class="gdp__yr">in <span id="cx-ingdp-year">&mdash;</span></span>
-          </div>
-          <div class="macro__chart macro__chart--tall" id="cx-ingdp"></div>
-          <span class="macro__src">Real growth, last ten years, World Bank.</span>
-        </div>
-        <div class="gdp">
-          <div class="gdp__head">
-            <span class="gdp__k">India &mdash; gross GST collected</span>
-            <b class="gdp__v" id="cx-ingst-now">&mdash;</b>
-            <span class="gdp__yr">in <span id="cx-ingst-year">&mdash;</span></span>
-          </div>
-          <div class="macro__chart macro__chart--tall" id="cx-ingst"></div>
-          <span class="macro__src">Rupees lakh crore, by financial year, from the Ministry of
-            Finance&rsquo;s own releases. FY26 is the ministry&rsquo;s full-year total of
-            &#8377;22,27,096 crore; on the like-for-like basis it published alongside, which
-            leaves compensation cess out of both years, the year rose 8.3%.</span>
-        </div>
-      </div>
-
       <p class="tvcredit">Growth and inflation from the
         <a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Bank</a>,
         policy rates from the
@@ -198,8 +209,9 @@
     </div>
   </section>
 
+
   <!-- =========================================================== sectors -->
-  <section class="section" id="sectors">
+  <section class="section section--alt" id="sectors">
     <div class="shell">
       <div class="sec-head reveal">
         <span class="eyebrow">Inside the index</span>
@@ -270,8 +282,8 @@
 </main>
 
 
-<script src="assets/js/main.js?v=20260902g"></script>
+<script src="assets/js/main.js?v=20260902h"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/market.js?v=20260902g"></script>
+<script src="assets/js/market.js?v=20260902h"></script>
 </body>
 </html>
