@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20260902e">
+<link rel="stylesheet" href="assets/css/style.css?v=20260902f">
 </head>
 <body>
 
@@ -49,9 +49,6 @@
       <div class="sec-head reveal">
         <span class="eyebrow">Where the indices stand</span>
         <h2 class="h2 balance">Today, and the long run.</h2>
-        <p>FY runs from 1&nbsp;April. Three years and longer are compounded annual returns;
-           everything shorter is the plain change over that period. A dash means the index is
-           not that old.</p>
       </div>
 
       <div class="retwrap reveal">
@@ -130,10 +127,7 @@
     <div class="shell">
       <div class="sec-head reveal">
         <span class="eyebrow">Inside the index</span>
-        <h2 class="h2 balance">Where the money sits, and what it did.</h2>
-        <p>Every company in the Nifty&nbsp;500, grouped by sector. Weight is that sector&rsquo;s
-           share of the index by market value. The return is the last three months, weighted the
-           same way. Sales growth compares the latest reported quarter with the one before it.</p>
+        <h2 class="h2 balance">Where the earnings come from.</h2>
       </div>
 
       <div class="retwrap reveal">
@@ -156,43 +150,12 @@
     </div>
   </section>
 
-  <!-- ==================================================== the long picture -->
-  <section class="section">
-    <div class="shell">
-      <div class="sec-head reveal">
-        <span class="eyebrow">The long picture</span>
-        <h2 class="h2 balance">The Sensex, over decades.</h2>
-        <p>Sensex on its own, back to the beginning. To put something beside it, press the
-           <strong>+</strong> next to the symbol at the top left and search for it &mdash; a
-           stock, gold, another index. Type the plain name and pick the BSE listing; NSE prices
-           are not licensed for charts outside TradingView&rsquo;s own site.</p>
-      </div>
-        <div class="tvbox" style="height:520px">
-          <div class="tradingview-widget-container" style="height:100%">
-            <div class="tradingview-widget-container__widget" style="height:100%"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-            {
-              "width": "100%", "height": "100%", "symbol": "BSE:SENSEX",
-              "interval": "M", "timezone": "Asia/Kolkata", "theme": "light", "style": "2",
-              "locale": "in", "hide_side_toolbar": true, "allow_symbol_change": true,
-              "backgroundColor": "rgba(250,248,245,1)", "gridColor": "rgba(228,223,214,0.6)",
-              "range": "ALL", "calendar": false, "support_host": "https://www.tradingview.com"
-            }
-            </script>
-          </div>
-        </div>
-    </div>
-  </section>
-
   <!-- =========================================================== economy -->
   <section class="section">
     <div class="shell">
       <div class="sec-head reveal">
         <span class="eyebrow">The economy underneath</span>
-        <h2 class="h2 balance">Growth, the price of money, and the price of everything.</h2>
-        <p>The repo rate is what money costs. Inflation is what it loses while you hold it.
-           Growth is the ground under both. Between them they set the bar every investment
-           has to clear.</p>
+        <h2 class="h2 balance">What money costs, and what the country earns.</h2>
       </div>
 
       <div class="macros reveal">
@@ -239,7 +202,7 @@
             <span class="gdp__yr">in <span id="cx-ingdp-year">&mdash;</span></span>
           </div>
           <div class="macro__chart macro__chart--tall" id="cx-ingdp"></div>
-          <span class="macro__src">Real growth, last five years, World Bank.</span>
+          <span class="macro__src">Real growth, last ten years, World Bank.</span>
         </div>
         <div class="gdp">
           <div class="gdp__head">
@@ -307,8 +270,8 @@
 </main>
 
 
-<script src="assets/js/main.js?v=20260902e"></script>
+<script src="assets/js/main.js?v=20260902f"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/market.js?v=20260902e"></script>
+<script src="assets/js/market.js?v=20260902f"></script>
 </body>
 </html>
