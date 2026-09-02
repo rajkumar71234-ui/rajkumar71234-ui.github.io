@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20260902a">
+<link rel="stylesheet" href="assets/css/style.css?v=20260902b">
 </head>
 <body>
 
@@ -87,8 +87,9 @@
            one, so the lines touch exactly where the index is on twenty times earnings. When
            price sits above earnings the market is paying more than twenty; when it sits below,
            less. Earnings are actual to the last reported quarter and dotted through the rest of
-           this financial year. Drag to pan, scroll to zoom, hover to read the level, the
-           earnings and the multiple. <span id="cx-gdpeps-from">&mdash;</span>.</p>
+           this financial year. Pick a period, drag to pan, scroll to zoom, hover to read the
+           level, the earnings and the multiple &mdash; the two axes keep their twenty-to-one
+           lock at every zoom. <span id="cx-gdpeps-from">&mdash;</span>.</p>
       </div>
 
       <div class="gdp gdp--wide reveal">
@@ -96,6 +97,14 @@
           <span class="lg lg--b">BSE 500 index &middot; left axis</span>
           <span class="lg lg--a">Earnings per index point &middot; right axis</span>
           <span class="lwc-read" id="cx-lwc-read"></span>
+        </div>
+        <div class="lwcbtns" id="cx-lwc-range">
+          <button type="button" data-y="1">1Y</button>
+          <button type="button" data-y="3">3Y</button>
+          <button type="button" data-y="5">5Y</button>
+          <button type="button" data-y="10">10Y</button>
+          <button type="button" data-y="20">20Y</button>
+          <button type="button" data-y="0" class="is-on">All</button>
         </div>
         <div class="lwc" id="cx-lwc"></div>
         <div class="macro__chart macro__chart--tall" id="cx-gdpeps" hidden></div>
@@ -312,8 +321,8 @@
 </main>
 
 
-<script src="assets/js/main.js?v=20260902a"></script>
+<script src="assets/js/main.js?v=20260902b"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/market.js?v=20260902a"></script>
+<script src="assets/js/market.js?v=20260902b"></script>
 </body>
 </html>
