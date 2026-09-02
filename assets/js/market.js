@@ -636,20 +636,37 @@
       proj.push({ time: monthEndISO(py, pm), value: +cur.toFixed(2) });
     }
 
-    /* ---- one price range, shared, so the ratio can never drift ---------- */
-    var lo = Infinity, hi = -Infinity;
-    priceRaw.forEach(function (d) {
-      if (d.value < lo) lo = d.value;
-      if (d.value > hi) hi = d.value;
-    });
-    epsRaw.concat(proj).forEach(function (d) {
-      var v = d.value * RATIO;
-      if (v < lo) lo = v;
-      if (v > hi) hi = v;
-    });
-    lo /= 1.10; hi *= 1.00;
-    var leftInfo  = { priceRange: { minValue: lo, maxValue: hi } };
-    var rightInfo = { priceRange: { minValue: lo / RATIO, maxValue: hi / RATIO } };
+    /* ---- one price range, shared, so the ratio can never drift ----------
+       The two axes always keep the same twenty-to-one relationship, but the
+       range itself follows whatever period is on screen — so you can zoom
+       into a few years and actually see them, and the lines still meet
+       exactly where the index is on twenty times earnings. */
+    var allEps = epsRaw.concat(proj.slice(1));
+    var visFrom = priceRaw[0].time, visTo = allEps[allEps.length - 1].time;
+
+    function spanIn(rows, mult) {
+      var lo = Infinity, hi = -Infinity;
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].time < visFrom || rows[i].time > visTo) continue;
+        var v = rows[i].value * mult;
+        if (v < lo) lo = v;
+        if (v > hi) hi = v;
+      }
+      return [lo, hi];
+    }
+
+    function bounds() {
+      var a = spanIn(priceRaw, 1), b = spanIn(allEps, RATIO);
+      var lo = Math.min(a[0], b[0]), hi = Math.max(a[1], b[1]);
+      if (!isFinite(lo) || !isFinite(hi) || lo <= 0) { lo = 500; hi = 80000; }
+      var pad = Math.pow(hi / lo, 0.06) || 1.05;
+      return { lo: lo / pad, hi: hi * pad };
+    }
+
+    function leftInfo()  { var b = bounds();
+      return { priceRange: { minValue: b.lo, maxValue: b.hi } }; }
+    function rightInfo() { var b = bounds();
+      return { priceRange: { minValue: b.lo / RATIO, maxValue: b.hi / RATIO } }; }
 
     var num = function (v) { return Math.round(v).toLocaleString("en-IN"); };
     var eps2 = function (v) { return v >= 100 ? num(v) : v.toFixed(1); };
@@ -676,25 +693,74 @@
       priceScaleId: "left", color: "#74604B", lineWidth: 2, priceLineVisible: false,
       crosshairMarkerRadius: 3,
       priceFormat: { type: "custom", minMove: 1, formatter: num },
-      autoscaleInfoProvider: function () { return leftInfo; }
+      autoscaleInfoProvider: leftInfo
     });
     var epsS = chart.addLineSeries({
       priceScaleId: "right", color: "#E0402B", lineWidth: 2, priceLineVisible: false,
       crosshairMarkerRadius: 3,
       priceFormat: { type: "custom", minMove: 0.1, formatter: eps2 },
-      autoscaleInfoProvider: function () { return rightInfo; }
+      autoscaleInfoProvider: rightInfo
     });
     var projS = chart.addLineSeries({
       priceScaleId: "right", color: "#E0402B", lineWidth: 2, lineStyle: 1,
       priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
       priceFormat: { type: "custom", minMove: 0.1, formatter: eps2 },
-      autoscaleInfoProvider: function () { return rightInfo; }
+      autoscaleInfoProvider: rightInfo
     });
 
     priceS.setData(priceRaw);
     epsS.setData(epsRaw);
     if (proj.length > 1) projS.setData(proj);
     chart.timeScale().fitContent();
+
+    /* re-fit the height to whatever period is on screen, keeping the lock */
+    var iso = function (t) {
+      if (typeof t === "string") return t;
+      if (typeof t === "object" && t && t.year) {
+        return t.year + "-" + String(t.month).padStart(2, "0") + "-" +
+               String(t.day).padStart(2, "0");
+      }
+      if (typeof t === "number") return new Date(t * 1000).toISOString().slice(0, 10);
+      return null;
+    };
+    var settling = false;
+    chart.timeScale().subscribeVisibleTimeRangeChange(function (r) {
+      if (!r || settling) return;
+      var a = iso(r.from), b = iso(r.to);
+      if (!a || !b || (a === visFrom && b === visTo)) return;
+      visFrom = a; visTo = b;
+      settling = true;
+      chart.priceScale("left").applyOptions({ autoScale: true });
+      chart.priceScale("right").applyOptions({ autoScale: true });
+      settling = false;
+    });
+
+    /* the period buttons */
+    var btns = document.getElementById("cx-lwc-range");
+    if (btns) {
+      var endT = allEps[allEps.length - 1].time;      /* the projected end */
+      var show = function (years, el) {
+        var from;
+        if (years) {
+          /* counted back from the last actual month, so "1Y" means the last
+             twelve months of real data — the projection sits beyond it */
+          from = new Date(last.time + "T00:00:00Z");
+          from.setUTCFullYear(from.getUTCFullYear() - years);
+          if (from < new Date(priceRaw[0].time + "T00:00:00Z")) years = 0;
+        }
+        if (!years) chart.timeScale().fitContent();
+        else chart.timeScale().setVisibleRange({ from: from.toISOString().slice(0, 10),
+                                                 to: endT });
+        Array.prototype.forEach.call(btns.children, function (c) {
+          c.classList.toggle("is-on", c === el);
+        });
+      };
+      Array.prototype.forEach.call(btns.children, function (c) {
+        c.addEventListener("click", function () {
+          show(+c.getAttribute("data-y") || 0, c);
+        });
+      });
+    }
 
     /* ---- the line of type under the chart ------------------------------ */
     var read = document.getElementById("cx-lwc-read");
