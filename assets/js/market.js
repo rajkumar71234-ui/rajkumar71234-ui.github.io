@@ -613,9 +613,12 @@
     });
     if (priceRaw.length < 24 || epsRaw.length < 24) return false;
 
-    var RATIO = 20;   /* the two axes are locked twenty to one, so the lines
-                         touch exactly where the index is on twenty times
-                         earnings and the gap between them is the rating */
+    /* Earnings read on the left scale, the index on the right, exactly as in
+       the sheet: both plain (not logarithmic), both starting at zero, and the
+       right scale always 22.5 times the left. Where the lines sit together the
+       index is on 22.5 times earnings; where price runs above earnings the
+       market is paying more than that, and below it, less. */
+    var RATIO = 22.5;
 
     /* ---- the current financial year, carried forward as a dotted line ----
        Earnings are actual up to the last reported quarter. The rest of this
@@ -643,10 +646,9 @@
     }
 
     /* ---- one price range, shared, so the ratio can never drift ----------
-       The two axes always keep the same twenty-to-one relationship, but the
-       range itself follows whatever period is on screen — so you can zoom
-       into a few years and actually see them, and the lines still meet
-       exactly where the index is on twenty times earnings. */
+       Both scales start at zero and the top follows whatever period is on
+       screen, so you can zoom into a few years and actually see them while
+       the twenty-two-and-a-half to one relationship still holds. */
     var allEps = epsRaw.concat(proj.slice(1));
     var visFrom = priceRaw[0].time, visTo = allEps[allEps.length - 1].time;
 
@@ -663,16 +665,14 @@
 
     function bounds() {
       var a = spanIn(priceRaw, 1), b = spanIn(allEps, RATIO);
-      var lo = Math.min(a[0], b[0]), hi = Math.max(a[1], b[1]);
-      if (!isFinite(lo) || !isFinite(hi) || lo <= 0) { lo = 500; hi = 80000; }
-      var pad = Math.pow(hi / lo, 0.06) || 1.05;
-      return { lo: lo / pad, hi: hi * pad };
+      var hi = Math.max(a[1], b[1]);
+      if (!isFinite(hi) || hi <= 0) hi = 45000;
+      return hi * 1.06;                        /* index units; zero at the foot */
     }
 
-    function leftInfo()  { var b = bounds();
-      return { priceRange: { minValue: b.lo, maxValue: b.hi } }; }
-    function rightInfo() { var b = bounds();
-      return { priceRange: { minValue: b.lo / RATIO, maxValue: b.hi / RATIO } }; }
+    /* left is earnings, right is the index — the sheet's own arrangement */
+    function leftInfo()  { return { priceRange: { minValue: 0, maxValue: bounds() / RATIO } }; }
+    function rightInfo() { return { priceRange: { minValue: 0, maxValue: bounds() } }; }
 
     var num = function (v) { return Math.round(v).toLocaleString("en-IN"); };
     var eps2 = function (v) { return v >= 100 ? num(v) : v.toFixed(1); };
@@ -682,10 +682,10 @@
                 fontFamily: "Inter, system-ui, sans-serif", attributionLogo: false },
       grid: { vertLines: { color: "rgba(228,223,214,0.7)" },
               horzLines: { color: "rgba(228,223,214,0.7)" } },
-      leftPriceScale:  { visible: true, mode: 1, borderColor: "#E4DFD6",
-                         scaleMargins: { top: 0.16, bottom: 0.06 } },
-      rightPriceScale: { visible: true, mode: 1, borderColor: "#E4DFD6",
-                         scaleMargins: { top: 0.16, bottom: 0.06 } },
+      leftPriceScale:  { visible: true, mode: 0, borderColor: "#E4DFD6",
+                         scaleMargins: { top: 0.08, bottom: 0.02 } },
+      rightPriceScale: { visible: true, mode: 0, borderColor: "#E4DFD6",
+                         scaleMargins: { top: 0.08, bottom: 0.02 } },
       timeScale: { borderColor: "#E4DFD6", rightOffset: 4, fixLeftEdge: true,
                    fixRightEdge: true, minBarSpacing: 0.02 },
       crosshair: { mode: 0, vertLine: { color: "#B9AF9F", labelBackgroundColor: "#74604B" },
@@ -696,22 +696,22 @@
     });
 
     var priceS = chart.addLineSeries({
-      priceScaleId: "left", color: "#74604B", lineWidth: 2, priceLineVisible: false,
+      priceScaleId: "right", color: "#74604B", lineWidth: 2, priceLineVisible: false,
       crosshairMarkerRadius: 3,
       priceFormat: { type: "custom", minMove: 1, formatter: num },
-      autoscaleInfoProvider: leftInfo
+      autoscaleInfoProvider: rightInfo
     });
     var epsS = chart.addLineSeries({
-      priceScaleId: "right", color: "#E0402B", lineWidth: 2, priceLineVisible: false,
+      priceScaleId: "left", color: "#E0402B", lineWidth: 2, priceLineVisible: false,
       crosshairMarkerRadius: 3,
-      priceFormat: { type: "custom", minMove: 0.1, formatter: eps2 },
-      autoscaleInfoProvider: rightInfo
+      priceFormat: { type: "custom", minMove: 1, formatter: eps2 },
+      autoscaleInfoProvider: leftInfo
     });
     var projS = chart.addLineSeries({
-      priceScaleId: "right", color: "#E0402B", lineWidth: 2, lineStyle: 1,
+      priceScaleId: "left", color: "#E0402B", lineWidth: 2, lineStyle: 1,
       priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false,
-      priceFormat: { type: "custom", minMove: 0.1, formatter: eps2 },
-      autoscaleInfoProvider: rightInfo
+      priceFormat: { type: "custom", minMove: 1, formatter: eps2 },
+      autoscaleInfoProvider: leftInfo
     });
 
     priceS.setData(priceRaw);
