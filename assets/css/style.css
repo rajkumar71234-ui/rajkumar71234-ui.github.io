@@ -2621,6 +2621,30 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-variant-numeric: tabular-nums;
 }
 .lwc-read b { color: var(--ink); }
+.lwcbtns {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 0;
+  flex-wrap: wrap;
+}
+.lwcbtns button {
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  padding: 4px 11px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--brown);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.lwcbtns button:hover { border-color: var(--brown); color: var(--ink); }
+.lwcbtns button.is-on {
+  background: var(--brown);
+  border-color: var(--brown);
+  color: #fff;
+}
 @media (max-width: 700px) {
   .lwc { height: 354px; }
   .lwc-read { margin-left: 0; width: 100%; }
