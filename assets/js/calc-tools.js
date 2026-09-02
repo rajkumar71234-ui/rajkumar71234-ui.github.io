@@ -55,133 +55,70 @@
   });
 
   /* ---------------------------------------------------------- lumpsum -- */
+  /* One amount, compounded once a year at the stated rate. */
 
   function runLump() {
     if (!$("l-amount")) return;
-    var p = num("l-amount"), y = Math.max(1, num("l-years"));
-    var r = num("l-rate") / 100, i = num("l-infl") / 100;
-
-    var fv = p * Math.pow(1 + r, y);
-    var real = fv / Math.pow(1 + i, y);
-
-    set("l-value", rupees(fv));
-    set("l-invested", rupees(p));
-    set("l-growth", rupees(fv - p));
-    set("l-real", rupees(real));
-    set("l-mult", p > 0 ? (fv / p).toFixed(2) + "×" : "—");
-
-    verdict("l-verdict", real > p,
-      real > p
-        ? "<strong>It stays ahead of inflation.</strong> " + shortRupees(fv) +
-          " after " + y + " years is worth " + shortRupees(real) + " in today’s money."
-        : "<strong>Inflation eats it.</strong> " + shortRupees(fv) +
-          " after " + y + " years is worth only " + shortRupees(real) +
-          " in today’s money — less than you put in.");
+    var amount = num("l-amount"), rate = num("l-rate"), years = num("l-years");
+    var value = amount * Math.pow(1 + rate / 100, years);
+    set("l-invested", rupees(amount));
+    set("l-growth", rupees(value - amount));
+    set("l-value", rupees(value));
   }
 
-  /* -------------------------------------------------- SIP with step-up -- */
-
-  function stepUpRun(sip, stepPct, years, ratePct) {
-    var rm = monthly(ratePct), months = years * 12;
-    var value = 0, invested = 0, current = sip;
-    for (var m = 1; m <= months; m++) {
-      value = value * (1 + rm) + current;
-      invested += current;
-      if (m % 12 === 0) current = current * (1 + stepPct / 100);
-    }
-    return { value: value, invested: invested, lastSip: current / (1 + stepPct / 100) };
-  }
+  /* ---------------------------------------------------------- step-up -- */
+  /* Monthly instalment at the start of each month, raised once a year.
+     The monthly rate is the annual rate divided by twelve, which is the
+     convention every fund house calculator uses. */
 
   function runStep() {
     if (!$("s-sip")) return;
-    var sip = num("s-sip"), step = num("s-step");
-    var y = Math.max(1, num("s-years")), rate = num("s-rate");
-
-    var up = stepUpRun(sip, step, y, rate);
-    var flat = stepUpRun(sip, 0, y, rate);
-
-    set("s-value", rupees(up.value));
-    set("s-invested", rupees(up.invested));
-    set("s-growth", rupees(up.value - up.invested));
-    set("s-last", rupees(up.lastSip) + " a month");
-    set("s-flat", rupees(flat.value));
-
-    var extra = up.value - flat.value;
-    verdict("s-verdict", true,
-      step > 0
-        ? "<strong>The step-up adds " + shortRupees(extra) + ".</strong> " +
-          "Raising the SIP " + step + "% a year takes you from " + shortRupees(flat.value) +
-          " to " + shortRupees(up.value) + " over " + y + " years."
-        : "<strong>" + shortRupees(up.value) + " after " + y + " years.</strong> " +
-          "Add a yearly step-up to see what a rising income does to the same plan.");
-  }
-
-  /* ------------------------------------------------------------- SWP -- */
-
-  /* Draw an income out of a corpus month by month. The withdrawal is raised
-     once a year if a step-up is set. Returns how long it lasted, what was
-     taken out along the way and what is left at the end. */
-  function drawDown(corpus, firstMonthly, years, ratePct, stepPct) {
-    var rm = monthly(ratePct), months = Math.round(years * 12);
-    var v = corpus, draw = firstMonthly, taken = 0, last = firstMonthly;
-    for (var m = 1; m <= months; m++) {
-      v = v * (1 + rm);
-      var paid = Math.min(draw, Math.max(v, 0));
-      v -= paid;
-      taken += paid;
-      last = draw;
-      if (v <= 0) return { months: m, survives: false, left: 0, taken: taken, last: last };
-      if (m % 12 === 0) draw = draw * (1 + stepPct / 100);
+    var sip = num("s-sip"), step = num("s-step"), rate = num("s-rate");
+    var years = Math.max(1, Math.round(num("s-years")));
+    var r = rate / 100 / 12, v = 0, put = sip, total = 0;
+    for (var m = 1; m <= years * 12; m++) {
+      v = (v + put) * (1 + r);
+      total += put;
+      if (m % 12 === 0) put = put * (1 + step / 100);
     }
-    return { months: months, survives: true, left: v, taken: taken, last: last };
+    set("s-invested", rupees(total));
+    set("s-growth", rupees(v - total));
+    set("s-value", rupees(v));
   }
 
-  /* the monthly withdrawal that would just see the whole term out */
-  function safeDraw(corpus, years, ratePct, stepPct) {
-    var lo = 0, hi = corpus / 12 + 1000;
-    while (drawDown(corpus, hi, years, ratePct, stepPct).survives && hi < corpus) hi *= 2;
-    for (var i = 0; i < 70; i++) {
-      var mid = (lo + hi) / 2;
-      if (drawDown(corpus, mid, years, ratePct, stepPct).survives) lo = mid; else hi = mid;
-    }
-    return lo;
-  }
-
-  function spell(months) {
-    var y = Math.floor(months / 12), m = months % 12;
-    if (y <= 0) return m + (m === 1 ? " month" : " months");
-    return y + (y === 1 ? " year" : " years") +
-           (m ? " " + m + (m === 1 ? " month" : " months") : "");
-  }
+  /* -------------------------------------------------------------- SWP -- */
+  /* The withdrawal comes out at the end of each month and, if a step-up is
+     set, is raised once a year. */
 
   function runSwp() {
     if (!$("w-corpus")) return;
-    var corpus = num("w-corpus"), draw = num("w-draw"), years = Math.max(1, num("w-years"));
-    var rate = num("w-rate"), step = num("w-step");
+    var corpus = num("w-corpus"), draw = num("w-draw"), step = num("w-step");
+    var rate = num("w-rate"), years = Math.max(1, Math.round(num("w-years")));
+    var r = rate / 100 / 12, v = corpus, take = draw, taken = 0, ran = 0;
 
-    var run = drawDown(corpus, draw, years, rate, step);
-    var safe = safeDraw(corpus, years, rate, step);
+    for (var m = 1; m <= years * 12; m++) {
+      v = v * (1 + r);
+      var paid = Math.min(take, Math.max(v, 0));
+      v -= paid;
+      taken += paid;
+      if (v <= 0 && !ran) { ran = m; v = 0; break; }
+      if (m % 12 === 0) take = take * (1 + step / 100);
+    }
 
-    set("w-lasts", run.survives ? "Intact after " + years + " years"
-                                : "Runs out after " + spell(run.months));
-    set("w-left", run.survives ? rupees(run.left) : "Nothing");
-    set("w-total", rupees(run.taken));
-    set("w-final", rupees(run.last) + " a month");
-    set("w-safe", rupees(Math.floor(safe / 100) * 100) + " a month");
-    set("w-rateout", corpus > 0 ? ((draw * 12 / corpus) * 100).toFixed(2) + "% of the corpus" : "—");
+    set("w-total", rupees(taken));
+    set("w-left", ran ? rupees(0) : rupees(v));
 
-    var el = $("w-left");
-    if (el) el.className = run.survives ? "is-good" : "is-short";
-
-    verdict("w-verdict", run.survives,
-      run.survives
-        ? "<strong>The corpus holds.</strong> Drawing " + shortRupees(draw) + " a month" +
-          (step > 0 ? ", rising " + step + "% a year, leaves " : " leaves ") +
-          "about " + shortRupees(run.left) + " after " + years + " years."
-        : "<strong>It runs out after " + spell(run.months) + ".</strong> " +
-          "To make it through " + years + " years on these assumptions the withdrawal has to " +
-          "start at about " + shortRupees(safe) + " a month instead of " +
-          shortRupees(draw) + ".");
+    var el = $("w-lasts");
+    if (el) {
+      if (ran) {
+        var y = Math.floor(ran / 12), mo = ran % 12;
+        el.className = "is-short";
+        el.innerHTML = "Runs out in year " + (y + (mo ? 1 : 0));
+      } else {
+        el.className = "is-good";
+        el.innerHTML = '<span class="tick" aria-hidden="true">\u2713</span> Corpus intact';
+      }
+    }
   }
 
   /* ------------------------------------------------------------- wire -- */
