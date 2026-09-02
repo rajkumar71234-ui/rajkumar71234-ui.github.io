@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20260902d">
+<link rel="stylesheet" href="assets/css/style.css?v=20260902e">
 </head>
 <body>
 
@@ -81,15 +81,7 @@
       <p class="tvcredit" id="retstamp"></p>
 
       <div class="sec-head sec-head--sub reveal">
-        <h3 class="h3">Price and earnings on one chart.</h3>
-        <p>The BSE&nbsp;500 against its own earnings. Two axes &mdash; the index on the left,
-           earnings per index point on the right &mdash; both logarithmic and locked twenty to
-           one, so the lines touch exactly where the index is on twenty times earnings. When
-           price sits above earnings the market is paying more than twenty; when it sits below,
-           less. Earnings are actual to the last reported quarter and dotted through the rest of
-           this financial year. Pick a period, drag to pan, scroll to zoom, hover to read the
-           level, the earnings and the multiple &mdash; the two axes keep their twenty-to-one
-           lock at every zoom. <span id="cx-gdpeps-from">&mdash;</span>.</p>
+        <h3 class="h3">The market runs on earnings.</h3>
       </div>
 
       <div class="gdp gdp--wide reveal">
@@ -133,15 +125,47 @@
     </div>
   </section>
 
+  <!-- =========================================================== sectors -->
+  <section class="section section--alt" id="sectors">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="eyebrow">Inside the index</span>
+        <h2 class="h2 balance">Where the money sits, and what it did.</h2>
+        <p>Every company in the Nifty&nbsp;500, grouped by sector. Weight is that sector&rsquo;s
+           share of the index by market value. The return is the last three months, weighted the
+           same way. Sales growth compares the latest reported quarter with the one before it.</p>
+      </div>
+
+      <div class="retwrap reveal">
+        <table class="rettable sectable">
+          <thead>
+            <tr>
+              <th scope="col">Sector</th>
+              <th scope="col">Weight</th>
+              <th scope="col"></th>
+              <th scope="col">3M return</th>
+              <th scope="col">QoQ sales</th>
+            </tr>
+          </thead>
+          <tbody id="secbody">
+            <tr><td colspan="5" class="retnote">Reading the constituents&hellip;</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="tvcredit" id="secstamp"></p>
+    </div>
+  </section>
+
   <!-- ==================================================== the long picture -->
-  <section class="section section--alt">
+  <section class="section">
     <div class="shell">
       <div class="sec-head reveal">
         <span class="eyebrow">The long picture</span>
         <h2 class="h2 balance">The Sensex, over decades.</h2>
-        <p>Sensex on its own, back to the beginning. Set the range to ALL for the whole
-           history, and use the chart&rsquo;s own compare box to put anything you like beside it
-           &mdash; gold, a stock, an index.</p>
+        <p>Sensex on its own, back to the beginning. To put something beside it, press the
+           <strong>+</strong> next to the symbol at the top left and search for it &mdash; a
+           stock, gold, another index. Type the plain name and pick the BSE listing; NSE prices
+           are not licensed for charts outside TradingView&rsquo;s own site.</p>
       </div>
         <div class="tvbox" style="height:520px">
           <div class="tradingview-widget-container" style="height:100%">
@@ -160,14 +184,15 @@
     </div>
   </section>
 
-  <!-- ======================================================= rates and CPI -->
+  <!-- =========================================================== economy -->
   <section class="section">
     <div class="shell">
       <div class="sec-head reveal">
-        <span class="eyebrow">Money and prices</span>
-        <h2 class="h2 balance">What money costs, and what it buys.</h2>
-        <p>The repo rate is the price of money. Inflation is what it loses while you hold it.
-           Between them they set the bar every investment has to clear.</p>
+        <span class="eyebrow">The economy underneath</span>
+        <h2 class="h2 balance">Growth, the price of money, and the price of everything.</h2>
+        <p>The repo rate is what money costs. Inflation is what it loses while you hold it.
+           Growth is the ground under both. Between them they set the bar every investment
+           has to clear.</p>
       </div>
 
       <div class="macros reveal">
@@ -206,20 +231,6 @@
 
       </div>
 
-    </div>
-  </section>
-
-  <!-- ============================================================ growth -->
-  <section class="section section--alt">
-    <div class="shell">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Growth</span>
-        <h2 class="h2 balance">What the two economies actually did.</h2>
-        <p>Real GDP growth, year by year, stripped of inflation. This is the ground under
-           every long-dated plan &mdash; the market can run ahead of it or behind it for
-           years, but not forever.</p>
-      </div>
-
       <div class="gdps reveal">
         <div class="gdp">
           <div class="gdp__head">
@@ -228,18 +239,21 @@
             <span class="gdp__yr">in <span id="cx-ingdp-year">&mdash;</span></span>
           </div>
           <div class="macro__chart macro__chart--tall" id="cx-ingdp"></div>
+          <span class="macro__src">Real growth, last five years, World Bank.</span>
         </div>
         <div class="gdp">
           <div class="gdp__head">
-            <span class="gdp__k">United States &mdash; real GDP growth</span>
-            <b class="gdp__v" id="cx-usgdp-now">&mdash;</b>
-            <span class="gdp__yr">in <span id="cx-usgdp-year">&mdash;</span></span>
+            <span class="gdp__k">India &mdash; gross GST collected</span>
+            <b class="gdp__v" id="cx-ingst-now">&mdash;</b>
+            <span class="gdp__yr">in <span id="cx-ingst-year">&mdash;</span></span>
           </div>
-          <div class="macro__chart macro__chart--tall" id="cx-usgdp"></div>
+          <div class="macro__chart macro__chart--tall" id="cx-ingst"></div>
+          <span class="macro__src">Rupees lakh crore, by financial year, from the Ministry of
+            Finance&rsquo;s own releases. FY26 is the ministry&rsquo;s full-year total of
+            &#8377;22,27,096 crore; on the like-for-like basis it published alongside, which
+            leaves compensation cess out of both years, the year rose 8.3%.</span>
         </div>
       </div>
-
-
 
       <p class="tvcredit">Growth and inflation from the
         <a href="https://data.worldbank.org/" target="_blank" rel="noopener">World Bank</a>,
@@ -249,36 +263,6 @@
     </div>
   </section>
 
-  <!-- =========================================================== sectors -->
-  <section class="section" id="sectors">
-    <div class="shell">
-      <div class="sec-head reveal">
-        <span class="eyebrow">Inside the index</span>
-        <h2 class="h2 balance">Where the money sits, and what it did.</h2>
-        <p>Every company in the Nifty&nbsp;500, grouped by sector. Weight is that sector&rsquo;s
-           share of the index by market value. The return is the last three months, weighted the
-           same way. Sales growth compares the latest reported quarter with the one before it.</p>
-      </div>
-
-      <div class="retwrap reveal">
-        <table class="rettable sectable">
-          <thead>
-            <tr>
-              <th scope="col">Sector</th>
-              <th scope="col">Weight</th>
-              <th scope="col"></th>
-              <th scope="col">3M return</th>
-              <th scope="col">QoQ sales</th>
-            </tr>
-          </thead>
-          <tbody id="secbody">
-            <tr><td colspan="5" class="retnote">Reading the constituents&hellip;</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="tvcredit" id="secstamp"></p>
-    </div>
-  </section>
 
 
   <!-- ============================================================== blog -->
@@ -323,8 +307,8 @@
 </main>
 
 
-<script src="assets/js/main.js?v=20260902d"></script>
+<script src="assets/js/main.js?v=20260902e"></script>
 <script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
-<script src="assets/js/market.js?v=20260902d"></script>
+<script src="assets/js/market.js?v=20260902e"></script>
 </body>
 </html>
