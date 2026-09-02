@@ -2453,6 +2453,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 .cx { width: 100%; height: 100%; display: block; }
 .cx-ax { font-size: 9px; fill: #8B8378; font-family: inherit; letter-spacing: 0.04em; }
+.cx-val--sm { font-size: 9px; }
+.cx-ax--sm { font-size: 8px; }
 .cx-val {
   font-size: 11px;
   fill: var(--ink);
