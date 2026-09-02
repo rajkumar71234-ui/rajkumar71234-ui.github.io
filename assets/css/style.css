@@ -1913,6 +1913,26 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* ---------------------------------------------------------- calculator -- */
 
+.calc__title {
+  margin: 0 0 26px;
+  letter-spacing: -0.02em;
+}
+.calc__eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.calc__stats .calc__stat--lead { padding-top: 18px; }
+.calc__stats .calc__stat--lead dd {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--brown-dark);
+  letter-spacing: -0.03em;
+}
 .calc { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 56px; align-items: start; }
 @media (max-width: 900px) { .calc { grid-template-columns: 1fr; gap: 40px; } }
 
