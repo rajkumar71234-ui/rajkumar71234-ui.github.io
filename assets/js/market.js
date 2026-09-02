@@ -11,7 +11,6 @@
   var ROWS = [
     { t: "NSE:NIFTY",        label: "Nifty 50",            note: "Large cap", k: "nifty50" },
     { t: "BSE:SENSEX",       label: "Sensex",              note: "30 companies" },
-    { t: "NSE:NIFTYJR",      label: "Nifty Next 50",       note: "The next tier", k: "niftynext50" },
     { t: "NSE:MID150BEES",   label: "Nifty Midcap 150",    note: "Mid cap", k: "midcap150", etf: true },
     { t: "NSE:HDFCSML250",   label: "Nifty Smallcap 250",  note: "Small cap", k: "smallcap250", etf: true },
     { t: "NSE:CNX500",       label: "Nifty 500",           note: "The broad market", k: "nifty500" },
@@ -251,6 +250,7 @@
     var span = hi - lo, top = hi + span * 0.16, bot = lo - (lo < 0 ? span * 0.1 : 0);
     var y = function (v) { return PT + (H - PT - PB) * (1 - (v - bot) / (top - bot)); };
     var slot = (W - PL - PR) / points.length, bw = Math.min(64, slot * 0.56);
+    var dense = points.length > 6 ? " cx-val--sm" : "";
 
     var out = "";
     var zero = y(0);
@@ -262,9 +262,11 @@
              '" width="' + bw.toFixed(1) + '" height="' + Math.max(1, ybot - ytop).toFixed(1) +
              '" fill="' + colour + '" fill-opacity="' + (i === points.length - 1 ? "1" : "0.55") + '"/>' +
              '<text x="' + cx.toFixed(1) + '" y="' + (ytop - 7).toFixed(1) +
-             '" text-anchor="middle" class="cx-val">' + (opts.fmt ? opts.fmt(p.v) : p.v.toFixed(1)) + "</text>" +
+             '" text-anchor="middle" class="cx-val' + dense + '">' +
+             (opts.fmt ? opts.fmt(p.v) : p.v.toFixed(1)) + "</text>" +
              '<text x="' + cx.toFixed(1) + '" y="' + (H - 7) +
-             '" text-anchor="middle" class="cx-ax">' + p.t + "</text>";
+             '" text-anchor="middle" class="cx-ax' + (dense ? " cx-ax--sm" : "") + '">' +
+             (dense ? String(p.t).replace(/^(FY|20)/, "") : p.t) + "</text>";
     });
     return '<svg class="cx" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" role="img" aria-label="' +
            (opts.label || "five years") + '">' + out + "</svg>";
@@ -342,10 +344,10 @@
   }
 
   if (chartEl("cx-ingdp")) {
-    /* the last five years, one bar a year */
-    worldBank("IND", "NY.GDP.MKTP.KD.ZG", 5).then(function (p) {
+    /* the last ten years, one bar a year */
+    worldBank("IND", "NY.GDP.MKTP.KD.ZG", 10).then(function (p) {
       paintBars(chartEl("cx-ingdp"), p, ACCENT, {
-        label: "India real GDP growth, last five years",
+        label: "India real GDP growth, last ten years",
         fmt: function (v) { return v.toFixed(1) + "%"; }
       });
       var l = document.getElementById("cx-ingdp-now");
