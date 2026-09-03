@@ -8,6 +8,8 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var num = function (id) { var v = parseFloat(($(id) || {}).value); return isNaN(v) ? 0 : v; };
+  /* The monthly rate that truly compounds to the annual return in the box:
+     twelve of these give exactly that figure, which is what a CAGR means. */
   var monthly = function (annualPct) { return Math.pow(1 + annualPct / 100, 1 / 12) - 1; };
 
   function rupees(n) {
@@ -67,15 +69,13 @@
   }
 
   /* ---------------------------------------------------------- step-up -- */
-  /* Monthly instalment at the start of each month, raised once a year.
-     The monthly rate is the annual rate divided by twelve, which is the
-     convention every fund house calculator uses. */
+  /* Monthly instalment at the start of each month, raised once a year. */
 
   function runStep() {
     if (!$("s-sip")) return;
     var sip = num("s-sip"), step = num("s-step"), rate = num("s-rate");
     var years = Math.max(1, Math.round(num("s-years")));
-    var r = rate / 100 / 12, v = 0, put = sip, total = 0;
+    var r = monthly(rate), v = 0, put = sip, total = 0;
     for (var m = 1; m <= years * 12; m++) {
       v = (v + put) * (1 + r);
       total += put;
@@ -94,7 +94,7 @@
     if (!$("w-corpus")) return;
     var corpus = num("w-corpus"), draw = num("w-draw"), step = num("w-step");
     var rate = num("w-rate"), years = Math.max(1, Math.round(num("w-years")));
-    var r = rate / 100 / 12, v = corpus, take = draw, taken = 0, ran = 0;
+    var r = monthly(rate), v = corpus, take = draw, taken = 0, ran = 0;
 
     for (var m = 1; m <= years * 12; m++) {
       v = v * (1 + r);
