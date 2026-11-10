@@ -1,5 +1,5 @@
 {
- "generated": "2026-11-09T22:42:12Z",
+ "generated": "2026-11-10T19:59:57Z",
  "indices": {
   "bse500": {
    "asOf": "2026-11-09",
@@ -990,8 +990,8 @@
    "m3": -4.32,
    "m6": 0.68,
    "name": "NIFTY MIDCAP 150",
-   "points": 409,
-   "today": 0.62,
+   "points": 410,
+   "today": 0.0,
    "via": "Yahoo Finance",
    "y1": 0.35,
    "y10": null,
